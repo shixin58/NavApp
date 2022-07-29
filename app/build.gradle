@@ -47,6 +47,8 @@ dependencies {
     // 包含了 viewmodel 和 livedata
     implementation 'androidx.lifecycle:lifecycle-extensions:2.1.0'
 
+    implementation "com.alibaba:fastjson:$fastjson_version"
+
     implementation project(':libnavannotation')
     //如果你使用kotlin,这里需要使用 kapt project
     annotationProcessor project(":libnavcompiler")

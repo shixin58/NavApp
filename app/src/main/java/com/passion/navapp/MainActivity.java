@@ -8,25 +8,30 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.passion.navapp.databinding.ActivityMainBinding;
+import com.passion.navapp.utils.NavGraphBuilder;
 
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
-
-    private ActivityMainBinding binding;
+    private ActivityMainBinding mBinding;
     private NavController navController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+        mBinding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(mBinding.getRoot());
+        BottomNavigationView navView = mBinding.navView;
 
-        BottomNavigationView navView = findViewById(R.id.nav_view);
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_main);
+        navController = NavHostFragment.findNavController(fragment);
+
         navView.setOnNavigationItemSelectedListener(this);
-        navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
+
+        NavGraphBuilder.build(this, fragment.getChildFragmentManager(), navController, fragment.getId());
     }
 
     @Override

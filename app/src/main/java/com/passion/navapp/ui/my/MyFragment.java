@@ -1,4 +1,4 @@
-package com.passion.navapp.ui.dashboard;
+package com.passion.navapp.ui.my;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -12,24 +12,24 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.passion.libnavannotation.FragmentDestination;
-import com.passion.navapp.databinding.FragmentDashboardBinding;
+import com.passion.navapp.databinding.FragmentMyBinding;
 
-@FragmentDestination(pageUrl = "main/tabs/sofa",asStarter = false)
-public class DashboardFragment extends Fragment {
+@FragmentDestination(pageUrl = "main/tabs/my",asStarter = false)
+public class MyFragment extends Fragment {
 
-    private FragmentDashboardBinding binding;
+    private FragmentMyBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        Log.i("DashboardFragment", "onCreateView");
-        DashboardViewModel dashboardViewModel =
-                ViewModelProviders.of(this).get(DashboardViewModel.class);
+        Log.i("MyFragment", "onCreateView");
+        MyViewModel myViewModel =
+                ViewModelProviders.of(this).get(MyViewModel.class);
 
-        binding = FragmentDashboardBinding.inflate(inflater, container, false);
+        binding = FragmentMyBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        final TextView textView = binding.textDashboard;
-        dashboardViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+        final TextView textView = binding.textMy;
+        myViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         return root;
     }
 

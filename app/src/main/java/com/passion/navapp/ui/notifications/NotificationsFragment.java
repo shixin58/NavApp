@@ -1,6 +1,7 @@
 package com.passion.navapp.ui.notifications;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,13 +14,14 @@ import androidx.lifecycle.ViewModelProviders;
 import com.passion.libnavannotation.FragmentDestination;
 import com.passion.navapp.databinding.FragmentNotificationsBinding;
 
-@FragmentDestination(pageUrl = "main/tabs/notification",asStarter = false)
+@FragmentDestination(pageUrl = "main/tabs/find",asStarter = false)
 public class NotificationsFragment extends Fragment {
 
     private FragmentNotificationsBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+        Log.i("NotificationsFragment", "onCreateView");
         NotificationsViewModel notificationsViewModel =
                 ViewModelProviders.of(this).get(NotificationsViewModel.class);
 

@@ -1,3 +1,7 @@
 ext {
-    fastjson_version = '1.2.59'
+    appcompat_version = '1.1.0'
+    material_version = '1.1.0'
+    lifecycle_version = '2.1.0'
+    fastjson_version = '1.2.69'
+    room_version = '2.4.3'
 }

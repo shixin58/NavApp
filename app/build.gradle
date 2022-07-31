@@ -1,11 +1,12 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion COMPILE_SDK_VERSION as int
+    buildToolsVersion BUILD_TOOLS_VERSION
     defaultConfig {
         applicationId "com.passion.navapp"
-        minSdkVersion 21
-        targetSdkVersion 30
+        minSdkVersion MIN_SDK_VERSION as int
+        targetSdkVersion TARGET_SDK_VERSION as int
         versionCode 1
         versionName "1.0"
     }
@@ -31,11 +32,8 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
-    // 兼容包
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-
-    // material组件
-    implementation 'com.google.android.material:material:1.1.0'
+    implementation "androidx.appcompat:appcompat:$appcompat_version"
+    implementation "com.google.android.material:material:$material_version"
 
     // 约束布局
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
@@ -44,12 +42,13 @@ dependencies {
     implementation 'androidx.navigation:navigation-fragment:2.1.0'
     implementation 'androidx.navigation:navigation-ui:2.1.0'
 
-    // 包含了 viewmodel 和 livedata
-    implementation 'androidx.lifecycle:lifecycle-extensions:2.1.0'
+    // 包含了ViewModel和LiveData
+    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
 
     implementation "com.alibaba:fastjson:$fastjson_version"
 
     implementation project(':libnavannotation')
     //如果你使用kotlin,这里需要使用 kapt project
     annotationProcessor project(":libnavcompiler")
+    implementation project(":libnetwork")
 }

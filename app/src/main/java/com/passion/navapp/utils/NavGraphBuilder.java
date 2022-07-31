@@ -10,6 +10,7 @@ import androidx.navigation.NavGraph;
 import androidx.navigation.NavGraphNavigator;
 import androidx.navigation.NavigatorProvider;
 
+import com.passion.libcommon.AppGlobals;
 import com.passion.navapp.FixFragmentNavigator;
 import com.passion.navapp.model.Destination;
 

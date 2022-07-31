@@ -1,4 +1,4 @@
-package com.passion.navapp.utils;
+package com.passion.libcommon;
 
 import android.app.Application;
 

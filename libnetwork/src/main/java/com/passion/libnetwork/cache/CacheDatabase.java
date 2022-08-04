@@ -6,7 +6,7 @@ import androidx.room.RoomDatabase;
 
 import com.passion.libcommon.AppGlobals;
 
-@Database(entities = {Cache.class}, version = 1, exportSchema = true)
+@Database(entities = {Cache.class, Person.class}, version = 1, exportSchema = true)
 public abstract class CacheDatabase extends RoomDatabase {
     private static final CacheDatabase database;
 
@@ -30,7 +30,9 @@ public abstract class CacheDatabase extends RoomDatabase {
     }
 
     // 只有在此声明，才会生成Dao实现类
-    public abstract CacheDao getCache();
+    public abstract CacheDao getCacheDao();
+
+    public abstract PersonDao getPersonDao();
 
     public static CacheDatabase get() {
         return database;

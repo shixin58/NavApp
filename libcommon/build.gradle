@@ -43,4 +43,8 @@ dependencies {
     annotationProcessor "androidx.lifecycle:lifecycle-compiler:$lifecycle_version"
 
     api "androidx.room:room-runtime:$room_version"
+
+    api group: 'com.github.bumptech.glide', name: 'glide', version: glide_version
+    annotationProcessor group: 'com.github.bumptech.glide', name: 'compiler', version: glide_version
+    api 'jp.wasabeef:glide-transformations:4.3.0'
 }

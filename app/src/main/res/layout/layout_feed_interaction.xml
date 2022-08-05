@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="feed"
+            type="com.passion.navapp.model.Feed" />
+        <import type="com.passion.navapp.utils.StringConverter"/>
+    </data>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_45"
+        android:paddingStart="@dimen/dp_16"
+        android:paddingEnd="@dimen/dp_16">
+
+        <!-- 点赞 -->
+        <com.google.android.material.button.MaterialButton
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:textColor="@{feed.ugc.hasLiked?@color/color_theme:@color/color_3d3}"
+            android:textSize="@dimen/sp_14"
+            android:text="@{StringConverter.convertFeedUgc(feed.ugc.likeCount)}"
+            android:backgroundTint="@color/color_white"
+            app:iconGravity="textStart"
+            app:iconPadding="@dimen/dp_4"
+            app:icon="@{feed.ugc.hasLiked?@drawable/icon_cell_liked:@drawable/icon_cell_like}"
+            tools:icon="@drawable/icon_cell_liked"
+            tools:textColor="@color/color_theme"
+            tools:text="1000"/>
+
+        <!-- 踩 -->
+        <com.google.android.material.button.MaterialButton
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:textColor="@{feed.ugc.hasdiss?@color/color_theme:@color/color_3d3}"
+            android:textSize="@dimen/sp_14"
+            android:text="踩"
+            android:backgroundTint="@color/color_white"
+            app:iconGravity="textStart"
+            app:iconPadding="@dimen/dp_4"
+            app:icon="@{feed.ugc.hasdiss?@drawable/icon_cell_dissed:@drawable/icon_cell_diss}"
+            tools:icon="@drawable/icon_cell_dissed"
+            tools:textColor="@color/color_theme"/>
+
+        <!-- 评论 -->
+        <com.google.android.material.button.MaterialButton
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:textColor="@color/color_3d3"
+            android:textSize="@dimen/sp_14"
+            android:text="@{StringConverter.convertFeedUgc(feed.ugc.commentCount)}"
+            android:backgroundTint="@color/color_white"
+            app:iconGravity="textStart"
+            app:iconPadding="@dimen/dp_4"
+            app:icon="@drawable/icon_cell_comment"
+            tools:text="1000"/>
+
+        <!-- 分享 -->
+        <com.google.android.material.button.MaterialButton
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:textColor="@color/color_3d3"
+            android:textSize="@dimen/sp_14"
+            android:text="@{StringConverter.convertFeedUgc(feed.ugc.shareCount)}"
+            android:backgroundTint="@color/color_white"
+            app:iconGravity="textStart"
+            app:iconPadding="@dimen/dp_4"
+            app:icon="@drawable/icon_cell_share"
+            tools:text="1000"/>
+    </LinearLayout>
+</layout>

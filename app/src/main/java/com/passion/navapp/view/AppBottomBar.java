@@ -1,4 +1,4 @@
-package com.passion.navapp.ui.view;
+package com.passion.navapp.view;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -14,7 +14,6 @@ import androidx.annotation.Nullable;
 import com.google.android.material.bottomnavigation.BottomNavigationItemView;
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.bottomnavigation.LabelVisibilityMode;
 import com.passion.navapp.R;
 import com.passion.navapp.model.BottomBar;
 import com.passion.navapp.model.Destination;
@@ -48,7 +47,7 @@ public class AppBottomBar extends BottomNavigationView {
         ColorStateList colorStateList = new ColorStateList(states, colors);
         setItemIconTintList(colorStateList);
         setItemTextColor(colorStateList);
-        setLabelVisibilityMode(LabelVisibilityMode.LABEL_VISIBILITY_LABELED);
+        setLabelVisibilityMode(BottomNavigationView.LABEL_VISIBILITY_LABELED);
         setSelectedItemId(bottomBar.selectTab);
 
         for (int i=0; i<tabs.size(); i++) {

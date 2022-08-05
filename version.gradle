@@ -5,4 +5,5 @@ ext {
     fastjson_version = '1.2.59'
     lifecycle_version = '2.1.0'
     room_version = '2.4.3'
+    glide_version = '4.13.0'
 }

@@ -29,27 +29,29 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
 public abstract class AbsListFragment<T,M extends AbsViewModel<T>> extends Fragment implements OnRefreshListener, OnLoadMoreListener {
-    private LayoutRefreshViewBinding binding;
+    protected LayoutRefreshViewBinding mBinding;
     protected M mViewModel;
 
-    private RecyclerView mRecyclerView;
-    private SmartRefreshLayout mRefreshLayout;
-    private EmptyView mEmptyView;
-    private PagedListAdapter<T, RecyclerView.ViewHolder> mAdapter;
+    protected RecyclerView mRecyclerView;
+    protected SmartRefreshLayout mRefreshLayout;
+    protected EmptyView mEmptyView;
+    protected PagedListAdapter<T, RecyclerView.ViewHolder> mAdapter;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        binding = LayoutRefreshViewBinding.inflate(inflater, container, false);
-        return binding.getRoot();
+        mBinding = LayoutRefreshViewBinding.inflate(inflater, container, false);
+        return mBinding.getRoot();
     }
+
+    protected abstract void afterViewCreated();
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mRecyclerView = binding.recyclerView;
-        mRefreshLayout = binding.refreshLayout;
-        mEmptyView = binding.emptyView;
+        mRecyclerView = mBinding.recyclerView;
+        mRefreshLayout = mBinding.refreshLayout;
+        mEmptyView = mBinding.emptyView;
 
         mRefreshLayout.setEnableRefresh(true);
         mRefreshLayout.setEnableLoadMore(true);
@@ -76,6 +78,7 @@ public abstract class AbsListFragment<T,M extends AbsViewModel<T>> extends Fragm
             // 监听分页有无更多数据，来决定是否关闭上来加载动画
             mViewModel.getBoundaryPageData().observe(getViewLifecycleOwner(), this::finishRefresh);
         }
+        afterViewCreated();
     }
 
     public void submitList(PagedList<T> pagedList) {

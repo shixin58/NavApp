@@ -144,7 +144,7 @@ public abstract class Request<T, R extends Request> implements Cloneable {
         ApiResponse<T> response = new ApiResponse<>();
         response.success = true;
         response.message = "缓存获取成功";
-        response.status = 304;
+        response.status = 304;// Not Modified, HttpURLConnection.HTTP_NOT_MODIFIED
         response.body = (T) cache;
         return response;
     }

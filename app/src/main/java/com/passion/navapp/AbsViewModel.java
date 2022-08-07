@@ -9,21 +9,25 @@ import androidx.paging.LivePagedListBuilder;
 import androidx.paging.PagedList;
 
 public abstract class AbsViewModel<T> extends ViewModel {
-    private DataSource dataSource;
+    public static final int INITIAL_LOAD_SIZE = 2;
+    public static final int PAGE_SIZE = 1;
+
+    protected PagedList.Config config;
+    private DataSource<Integer,T> dataSource;
 
     private final LiveData<PagedList<T>> pageData;
     private final MutableLiveData<Boolean> boundaryPageData = new MutableLiveData<>();
 
     public AbsViewModel() {
-        PagedList.Config config = new PagedList.Config.Builder()
-                .setInitialLoadSizeHint(12)
-                .setPageSize(10)
+        config = new PagedList.Config.Builder()
+                .setInitialLoadSizeHint(INITIAL_LOAD_SIZE)
+                .setPageSize(PAGE_SIZE)
 //                .setMaxSize(100)
 //                .setEnablePlaceholders()
 //                .setPrefetchDistance()
                 .build();
 
-        pageData = new LivePagedListBuilder(factory, config)
+        pageData = new LivePagedListBuilder<>(factory, config)
                 // 多个参数可封装
                 .setInitialLoadKey(0)
                 // 异步线程池使用内置
@@ -32,7 +36,7 @@ public abstract class AbsViewModel<T> extends ViewModel {
                 .build();
     }
 
-    public DataSource getDataSource() {
+    public DataSource<Integer,T> getDataSource() {
         return dataSource;
     }
 
@@ -61,10 +65,10 @@ public abstract class AbsViewModel<T> extends ViewModel {
         }
     };
 
-    DataSource.Factory factory = new DataSource.Factory() {
+    DataSource.Factory<Integer, T> factory = new DataSource.Factory<Integer, T>() {
         @NonNull
         @Override
-        public DataSource create() {
+        public DataSource<Integer, T> create() {
             if (dataSource==null || dataSource.isInvalid()) {
                 dataSource = createDataSource();
             }
@@ -72,5 +76,5 @@ public abstract class AbsViewModel<T> extends ViewModel {
         }
     };
 
-    public abstract DataSource createDataSource();
+    public abstract DataSource<Integer,T> createDataSource();
 }

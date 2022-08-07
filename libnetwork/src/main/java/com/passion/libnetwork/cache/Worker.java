@@ -1,6 +1,6 @@
 package com.passion.libnetwork.cache;
 
-public class User {
+public class Worker {
     public String id;
     public String name;
 }

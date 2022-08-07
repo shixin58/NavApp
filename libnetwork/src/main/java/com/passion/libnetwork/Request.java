@@ -62,11 +62,19 @@ public abstract class Request<T, R extends Request> implements Cloneable {
     }
 
     public R addParam(String key, Object value) {
+        if (value == null) {
+            return (R) this;
+        }
+
         try {
-            Field field = value.getClass().getField("TYPE");
-            Class clazz = (Class) field.get(null);
-            if (clazz.isPrimitive()) {
+            if (value.getClass()==String.class) {
                 params.put(key, value);
+            } else {
+                Field field = value.getClass().getField("TYPE");
+                Class clazz = (Class) field.get(null);
+                if (clazz.isPrimitive()) {
+                    params.put(key, value);
+                }
             }
         } catch (NoSuchFieldException | IllegalAccessException e) {
             e.printStackTrace();

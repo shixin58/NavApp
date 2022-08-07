@@ -52,7 +52,7 @@ public class ListPlayerView extends FrameLayout {
         mVideoUrl = videoUrl;
 
         PPImageView.setImageUrl(cover, coverUrl, false);
-        if (widthPx<heightPx) {
+        if (widthPx < heightPx) {
             setBlurImageUrl(coverUrl, 10);
             blur.setVisibility(VISIBLE);
         } else {
@@ -78,22 +78,26 @@ public class ListPlayerView extends FrameLayout {
             coverWidth = (int) (widthPx/(heightPx*1.0f/coverHeight));
         }
 
+        // 设置控件大小
         ViewGroup.LayoutParams layoutParams = getLayoutParams();
         layoutParams.width = layoutWidth;
         layoutParams.height = layoutHeight;
         setLayoutParams(layoutParams);
 
+        // 设置背景虚化View大小
         ViewGroup.LayoutParams blurParams = blur.getLayoutParams();
         blurParams.width = layoutWidth;
         blurParams.height = layoutHeight;
         blur.setLayoutParams(blurParams);
 
+        // 设置封面图View大小
         LayoutParams coverParams = (LayoutParams) cover.getLayoutParams();
         coverParams.width = coverWidth;
         coverParams.height = coverHeight;
         coverParams.gravity = Gravity.CENTER;
         cover.setLayoutParams(coverParams);
 
+        // 设置播放按钮居中
         LayoutParams playBtnParams = (LayoutParams) playBtn.getLayoutParams();
         playBtnParams.gravity = Gravity.CENTER;
         playBtn.setLayoutParams(playBtnParams);

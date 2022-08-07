@@ -1,41 +1,41 @@
 package com.passion.navapp.ui.home;
 
 import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.annotation.Nullable;
+import androidx.paging.PagedListAdapter;
 
 import com.passion.libnavannotation.FragmentDestination;
-import com.passion.navapp.databinding.FragmentHomeBinding;
+import com.passion.navapp.model.Feed;
+import com.passion.navapp.ui.AbsListFragment;
+import com.scwang.smart.refresh.layout.api.RefreshLayout;
 
 @FragmentDestination(pageUrl = "main/tabs/home",asStarter = true)
-public class HomeFragment extends Fragment {
+public class HomeFragment extends AbsListFragment<Feed,HomeViewModel> {
+    private String feedType;
 
-    private FragmentHomeBinding binding;
-
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-        Log.i("HomeFragment", "onCreateView");
-        HomeViewModel homeViewModel =
-                ViewModelProviders.of(this).get(HomeViewModel.class);
-
-        binding = FragmentHomeBinding.inflate(inflater, container, false);
-        View root = binding.getRoot();
-
-        final TextView textView = binding.textHome;
-        homeViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
-        return root;
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mViewModel.setFeedType(feedType);
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
+    public PagedListAdapter getAdapter() {
+        Bundle bundle = getArguments();
+        feedType = bundle==null?"all":bundle.getString("feedType");
+        return new FeedAdapter(getContext(), feedType);
+    }
+
+    @Override
+    public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
+
+    }
+
+    @Override
+    public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+
     }
 }

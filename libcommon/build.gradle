@@ -39,12 +39,30 @@ dependencies {
     api 'androidx.navigation:navigation-fragment:2.1.0'
     api 'androidx.navigation:navigation-ui:2.1.0'
 
+    // lifecycle-extensions包含了LiveData和ViewModel
     api "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
     annotationProcessor "androidx.lifecycle:lifecycle-compiler:$lifecycle_version"
 
     api "androidx.room:room-runtime:$room_version"
 
+    // paging分页组件
+    api "androidx.paging:paging-runtime:2.1.0"
+
     api group: 'com.github.bumptech.glide', name: 'glide', version: glide_version
     annotationProcessor group: 'com.github.bumptech.glide', name: 'compiler', version: glide_version
     api 'jp.wasabeef:glide-transformations:4.3.0'
+
+    api "io.github.scwang90:refresh-layout-kernel:$smart_refresh_layout_version" // 核心必须依赖
+    api "io.github.scwang90:refresh-header-classics:$smart_refresh_layout_version" // 经典刷新头
+    api "io.github.scwang90:refresh-header-radar:$smart_refresh_layout_version" // 雷达刷新头
+    api "io.github.scwang90:refresh-header-falsify:$smart_refresh_layout_version" // 虚拟刷新头
+    api "io.github.scwang90:refresh-header-material:$smart_refresh_layout_version" // 谷歌刷新头
+    api "io.github.scwang90:refresh-header-two-level:$smart_refresh_layout_version" // 二级刷新头
+    api "io.github.scwang90:refresh-footer-ball:$smart_refresh_layout_version" // 球脉冲加载
+    api "io.github.scwang90:refresh-footer-classics:$smart_refresh_layout_version" // 经典加载
+
+    // exo播放器
+    api "com.google.android.exoplayer:exoplayer-core:$exo_player_version"
+    api "com.google.android.exoplayer:exoplayer-dash:$exo_player_version"
+    api "com.google.android.exoplayer:exoplayer-ui:$exo_player_version"
 }

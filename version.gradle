@@ -6,4 +6,6 @@ ext {
     lifecycle_version = '2.1.0'
     room_version = '2.4.3'
     glide_version = '4.13.0'
+    smart_refresh_layout_version = "2.0.5"
+    exo_player_version = '2.14.0'
 }

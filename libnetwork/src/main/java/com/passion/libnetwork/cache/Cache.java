@@ -18,7 +18,7 @@ public class Cache implements Serializable {
     public byte[] data;
 
 //    @Embedded
-//    public User user;
+//    public Worker user;
 
 //    @TypeConverters(value = {DateConverter.class})
 //    public Date date;

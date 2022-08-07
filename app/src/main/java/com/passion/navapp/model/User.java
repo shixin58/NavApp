@@ -60,7 +60,7 @@ public class User extends BaseObservable implements Serializable {
                 && topCommentCount == newUser.topCommentCount
                 && followCount == newUser.followCount
                 && followerCount == newUser.followerCount
-                && qqOpenId == newUser.qqOpenId
+                && TextUtils.equals(qqOpenId, newUser.qqOpenId)
                 && expires_time == newUser.expires_time
                 && score == newUser.score
                 && historyCount == newUser.historyCount

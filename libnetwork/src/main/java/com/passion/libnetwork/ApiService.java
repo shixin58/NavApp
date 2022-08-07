@@ -29,6 +29,7 @@ public class ApiService {
                 .readTimeout(5L, TimeUnit.SECONDS)
                 .writeTimeout(5L, TimeUnit.SECONDS)
                 .connectTimeout(5L, TimeUnit.SECONDS)
+                .addInterceptor(interceptor)
                 .build();
 
         TrustManager[] trustManagers = new TrustManager[]{new X509TrustManager() {
@@ -66,5 +67,13 @@ public class ApiService {
             converter = new JsonConverter();
         }
         sConverter = converter;
+    }
+
+    public static <T> GetRequest<T> get(String url) {
+        return new GetRequest<>(sBaseUrl + url);
+    }
+
+    public static <T> PostRequest<T> post(String url) {
+        return new PostRequest<>(sBaseUrl + url);
     }
 }

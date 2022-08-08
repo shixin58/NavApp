@@ -1,2 +1,7 @@
 /build
 /src/main/assets/destination.json
+/release
+/debug
+/appbundle/pkg_spec_extract
+/appbundle/device_spec.json
+/appbundle/pkg.apks

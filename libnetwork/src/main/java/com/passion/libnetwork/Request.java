@@ -109,7 +109,7 @@ public abstract class Request<T, R extends Request> implements Cloneable {
                 @Override
                 public void run() {
                     ApiResponse<T> response = readCache();
-                    if (callback != null) {
+                    if (callback != null && response.body != null) {
                         callback.onCacheSuccess(response);
                     }
                 }

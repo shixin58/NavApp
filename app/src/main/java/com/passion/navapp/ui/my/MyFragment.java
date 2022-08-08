@@ -14,7 +14,7 @@ import androidx.lifecycle.ViewModelProviders;
 import com.passion.libnavannotation.FragmentDestination;
 import com.passion.navapp.databinding.FragmentMyBinding;
 
-@FragmentDestination(pageUrl = "main/tabs/my",asStarter = false)
+@FragmentDestination(pageUrl = "main/tabs/my",needLogin = true)
 public class MyFragment extends Fragment {
 
     private FragmentMyBinding binding;

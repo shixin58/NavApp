@@ -4,6 +4,9 @@
 
     <data>
         <variable
+            name="owner"
+            type="androidx.lifecycle.LifecycleOwner" />
+        <variable
             name="feed"
             type="com.passion.navapp.model.Feed" />
     </data>
@@ -34,6 +37,7 @@
             app:comment="@{feed.topComment}"/>
 
         <include layout="@layout/layout_feed_interaction"
+            app:owner="@{owner}"
             app:feed="@{feed}"/>
     </LinearLayout>
 </layout>

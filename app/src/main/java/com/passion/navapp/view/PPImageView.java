@@ -32,14 +32,16 @@ public class PPImageView extends AppCompatImageView {
 
     @BindingAdapter(value = {"imageUrl", "isCircle"}, requireAll = false)
     public static void setImageUrl(PPImageView imageView, String imageUrl, boolean isCircle) {
-//        imageView.getContext()
+//        imageView.getContext()，仅用View提供Context
         RequestBuilder<Drawable> builder = Glide.with(imageView)
                 .load(imageUrl);
         if (isCircle) {
+            // BitmapTransformation子类，Glide内置，实现Transformation#transform()
             builder.transform(new CircleCrop());
         }
         ViewGroup.LayoutParams layoutParams = imageView.getLayoutParams();
-        if (layoutParams!=null && layoutParams.width>0 && layoutParams.height>0) {
+        if (layoutParams != null && layoutParams.width > 0 && layoutParams.height > 0) {
+            // 设置BaseRequestOptions#overrideWidth/overrideHeight
             builder.override(layoutParams.width, layoutParams.height);
         }
         builder.into(imageView);
@@ -50,7 +52,7 @@ public class PPImageView extends AppCompatImageView {
     }
 
     public void bindData(int widthPx, int heightPx, int marginLeft, int maxWidth, int maxHeight, String imageUrl) {
-        if (widthPx<=0 || heightPx<=0) {
+        if (widthPx <= 0 || heightPx <= 0) {
             Glide.with(this).load(imageUrl).into(new SimpleTarget<Drawable>() {
                 @Override
                 public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {

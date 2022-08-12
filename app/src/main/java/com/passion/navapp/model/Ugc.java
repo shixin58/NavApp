@@ -59,10 +59,10 @@ public class Ugc extends BaseObservable implements Serializable {
         if (this.hasLiked == hasLiked)
             return;
         if (hasLiked) {
-            likeCount = likeCount + 1;
+            likeCount++;
             setHasdiss(false);
         } else {
-            likeCount = likeCount - 1;
+            likeCount--;
         }
         this.hasLiked = hasLiked;
         notifyPropertyChanged(BR._all);

@@ -18,6 +18,7 @@ import com.passion.libnetwork.Request;
 import com.passion.navapp.AbsViewModel;
 import com.passion.navapp.model.Feed;
 import com.passion.navapp.ui.MutableDataSource;
+import com.passion.navapp.ui.login.UserManager;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -78,7 +79,7 @@ public class HomeViewModel extends AbsViewModel<Feed> {
         }
         Request request = ApiService.get("/feeds/queryHotFeedsList")
                 .addParam("feedType", mFeedType)
-                .addParam("userId", 0)
+                .addParam("userId", UserManager.get().getUserId())
                 .addParam("feedId", key)
                 .addParam("pageCount", count)
                 .responseType(new TypeReference<ArrayList<Feed>>(){}.getType());

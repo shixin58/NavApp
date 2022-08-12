@@ -7,12 +7,16 @@
         <variable
             name="comment"
             type="com.passion.navapp.model.Comment" />
+        <variable
+            name="owner"
+            type="androidx.lifecycle.LifecycleOwner" />
         <import type="android.text.TextUtils"/>
         <import type="android.view.View"/>
         <import type="com.passion.navapp.utils.StringConverter"/>
+        <import type="com.passion.navapp.ui.home.InteractionPresenter" />
     </data>
 
-    <FrameLayout
+    <com.passion.libcommon.RoundFrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/dp_16"
@@ -20,7 +24,10 @@
         android:background="@color/color_gray2"
         android:paddingStart="@dimen/dp_10"
         android:paddingEnd="@dimen/dp_10"
-        android:paddingBottom="@dimen/dp_10">
+        android:paddingBottom="@dimen/dp_10"
+        android:visibility="@{comment!=null?View.VISIBLE:View.GONE}"
+        app:radius="6dp"
+        app:radiusSide="all">
 
         <ImageView
             android:layout_width="wrap_content"
@@ -76,6 +83,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/dp_4"
+                    android:onClick="@{()->InteractionPresenter.toggleCommentLike(owner,comment)}"
                     android:padding="2dp"
                     android:src="@{comment.ugc.hasLiked?@drawable/icon_cell_liked:@drawable/icon_cell_like}"
                     tools:src="@drawable/icon_cell_liked" />
@@ -116,5 +124,5 @@
                     android:src="@drawable/icon_video_play" />
             </FrameLayout>
         </LinearLayout>
-    </FrameLayout>
+    </com.passion.libcommon.RoundFrameLayout>
 </layout>

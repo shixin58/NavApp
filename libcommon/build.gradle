@@ -61,7 +61,7 @@ dependencies {
     api "io.github.scwang90:refresh-footer-ball:$smart_refresh_layout_version" // 球脉冲加载
     api "io.github.scwang90:refresh-footer-classics:$smart_refresh_layout_version" // 经典加载
 
-    // exo播放器
+    // YouTube、腾讯视频、极客MediaPlayer均使用exo播放器
     api "com.google.android.exoplayer:exoplayer-core:$exo_player_version"
     api "com.google.android.exoplayer:exoplayer-dash:$exo_player_version"
     api "com.google.android.exoplayer:exoplayer-ui:$exo_player_version"

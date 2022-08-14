@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.ViewDataBinding;
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.passion.navapp.databinding.LayoutFeedTypeImageBinding;
 import com.passion.navapp.databinding.LayoutFeedTypeVideoBinding;
 import com.passion.navapp.model.Feed;
+import com.passion.navapp.view.ListPlayerView;
 
 public class FeedAdapter extends PagedListAdapter<Feed, FeedAdapter.ViewHolder> {
     private final LayoutInflater mInflater;
@@ -64,6 +66,8 @@ public class FeedAdapter extends PagedListAdapter<Feed, FeedAdapter.ViewHolder> 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private final ViewDataBinding mBinding;
+        public ListPlayerView listPlayerView;
+        public ImageView feedImage;
 
         public ViewHolder(@NonNull View itemView, ViewDataBinding binding) {
             super(itemView);
@@ -76,12 +80,22 @@ public class FeedAdapter extends PagedListAdapter<Feed, FeedAdapter.ViewHolder> 
                 imageBinding.setOwner((LifecycleOwner) mContext);
                 imageBinding.setFeed(item);
                 imageBinding.feedImage.bindData(item.width, item.height, 16, item.cover);
+                feedImage = imageBinding.feedImage;
             } else {
                 LayoutFeedTypeVideoBinding videoBinding = (LayoutFeedTypeVideoBinding) mBinding;
                 videoBinding.setOwner((LifecycleOwner) mContext);
                 videoBinding.setFeed(item);
                 videoBinding.listPlayerView.bindData(mCategory, item.width, item.height, item.cover, item.url);
+                listPlayerView = videoBinding.listPlayerView;
             }
+        }
+
+        public boolean isVideoItem() {
+            return mBinding instanceof LayoutFeedTypeVideoBinding;
+        }
+
+        public ListPlayerView getListPlayerView() {
+            return listPlayerView;
         }
     }
 }

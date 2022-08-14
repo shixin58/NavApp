@@ -11,7 +11,7 @@
         android:layout_height="match_parent"
         tools:background="@color/color_theme_10"/>
 
-    <!-- 真正播放视频的View，列表滑动时在此动态移除、添加。全局只有1个 -->
+    <!-- 真正播放视频的PlayerView，列表滑动时在此动态移除、添加。全局只有1个 -->
 
     <com.passion.navapp.view.PPImageView
         android:id="@+id/cover"
@@ -25,8 +25,6 @@
         android:layout_gravity="center"
         android:src="@drawable/icon_video_play"/>
 
-    <!-- 视频播放底部进度条，动态移除、添加。全局只有1个 -->
-
     <!-- loading动画 -->
     <ProgressBar
         android:id="@+id/buffer_view"
@@ -36,4 +34,6 @@
         android:indeterminate="true"
         android:indeterminateTint="@color/color_theme_10"
         android:visibility="gone"/>
+
+    <!-- 视频播放底部进度条PlayerControlView，动态移除、添加。全局只有1个 -->
 </merge>

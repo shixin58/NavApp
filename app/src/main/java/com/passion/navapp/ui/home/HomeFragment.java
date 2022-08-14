@@ -10,6 +10,7 @@ import androidx.paging.PagedList;
 import androidx.paging.PagedListAdapter;
 
 import com.passion.libnavannotation.FragmentDestination;
+import com.passion.navapp.exoplayer.PageListPlayDetector;
 import com.passion.navapp.model.Feed;
 import com.passion.navapp.ui.AbsListFragment;
 import com.passion.navapp.ui.MutableDataSource;
@@ -20,6 +21,7 @@ import java.util.List;
 @FragmentDestination(pageUrl = "main/tabs/home",asStarter = true)
 public class HomeFragment extends AbsListFragment<Feed,HomeViewModel> {
     private String feedType;
+    private PageListPlayDetector mPlayDetector;
 
     @Override
     protected void afterViewCreated() {
@@ -32,13 +34,30 @@ public class HomeFragment extends AbsListFragment<Feed,HomeViewModel> {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mViewModel.setFeedType(feedType);
+        mPlayDetector = new PageListPlayDetector(this, mRecyclerView);
     }
 
     @Override
     public PagedListAdapter getAdapter() {
         Bundle bundle = getArguments();
         feedType = bundle==null?"all":bundle.getString("feedType");
-        return new FeedAdapter(getContext(), feedType);
+        return new FeedAdapter(getContext(), feedType) {
+            @Override
+            public void onViewAttachedToWindow(@NonNull ViewHolder holder) {
+                super.onViewAttachedToWindow(holder);
+                if (holder.isVideoItem()) {
+                    mPlayDetector.addTarget(holder.getListPlayerView());
+                }
+            }
+
+            @Override
+            public void onViewDetachedFromWindow(@NonNull ViewHolder holder) {
+                super.onViewDetachedFromWindow(holder);
+                if (holder.isVideoItem()) {
+                    mPlayDetector.removeTarget(holder.getListPlayerView());
+                }
+            }
+        };
     }
 
     @Override
@@ -65,5 +84,17 @@ public class HomeFragment extends AbsListFragment<Feed,HomeViewModel> {
         // invalidate()之后Paging会重新创建一个DataSource和PagedList, 在PagedList()调用DataSource#loadInitial()方法加载初始化数据
         // 详情见LivePagedListBuilder#compute()方法
         mViewModel.getDataSource().invalidate();
+    }
+
+    @Override
+    public void onResume() {
+        mPlayDetector.onResume();
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        mPlayDetector.onPause();
+        super.onPause();
     }
 }

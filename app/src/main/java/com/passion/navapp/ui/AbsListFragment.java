@@ -97,7 +97,7 @@ public abstract class AbsListFragment<T,M extends AbsViewModel<T>> extends Fragm
         }
 
         PagedList<T> currentList = mAdapter.getCurrentList();
-        boolean hasData = !remoteNotEmpty || currentList!=null && !currentList.isEmpty();
+        boolean hasData = remoteNotEmpty || (currentList!=null && !currentList.isEmpty());
         if (hasData) {
             mEmptyView.setVisibility(View.GONE);
         } else {

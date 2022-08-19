@@ -4,9 +4,9 @@ package com.passion.navapp.model;
  * "isFragment": true,
  * "asStarter": false,
  * "needLogin": false,
- * "pageUrl": "main/tabs/dashboard",
+ * "pageUrl": "main/tabs/sofa",
  * "id": 439985796,
- * "clazzName": "com.passion.navapp.ui.dashboard.DashboardFragment"
+ * "clazzName": "com.passion.navapp.ui.sofa.SofaFragment"
  */
 public class Destination {
     public boolean isFragment;

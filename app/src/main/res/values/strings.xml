@@ -1,7 +1,10 @@
 <resources>
     <string name="app_name">NavApp</string>
+
+    <!-- 初始模版的三个tab，不再使用 -->
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+
     <string name="login_text">QQ快捷登录</string>
 </resources>

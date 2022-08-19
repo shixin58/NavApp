@@ -23,6 +23,14 @@ public class HomeFragment extends AbsListFragment<Feed,HomeViewModel> {
     private String feedType;
     private PageListPlayDetector mPlayDetector;
 
+    public static HomeFragment getInstance(String feedType) {
+        HomeFragment fragment = new HomeFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("feedType", feedType);
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
     @Override
     protected void afterViewCreated() {
         mViewModel.getCacheLiveData().observe(this, feeds -> {
@@ -88,13 +96,32 @@ public class HomeFragment extends AbsListFragment<Feed,HomeViewModel> {
 
     @Override
     public void onResume() {
-        mPlayDetector.onResume();
         super.onResume();
+        if (getParentFragment() != null) {
+            if (getParentFragment().isVisible() && isVisible()) {
+                mPlayDetector.onResume();
+            }
+        } else {
+            if (isVisible()) {
+                mPlayDetector.onResume();
+            }
+        }
     }
 
     @Override
     public void onPause() {
         mPlayDetector.onPause();
         super.onPause();
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        // 切换底部tab时，控制视频暂停/恢复播放
+        if (hidden) {
+            mPlayDetector.onPause();
+        } else {
+            mPlayDetector.onResume();
+        }
     }
 }

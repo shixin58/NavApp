@@ -70,8 +70,13 @@ public class HomeFragment extends AbsListFragment<Feed,HomeViewModel> {
 
     @Override
     public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
+        final PagedList<Feed> currentList = mAdapter.getCurrentList();
+        if (currentList == null || currentList.isEmpty()) {
+            finishRefresh(false);
+            return;
+        }
         // 手动上拉加载更多，解决paging某次no data就禁用加载更多的问题
-        Feed lastFeed = mAdapter.getCurrentList().get(mAdapter.getItemCount() - 1);
+        Feed lastFeed = currentList.get(mAdapter.getItemCount() - 1);
         mViewModel.loadAfter(lastFeed.id, new ItemKeyedDataSource.LoadCallback<Feed>(){
             @Override
             public void onResult(@NonNull List<Feed> data) {

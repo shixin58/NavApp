@@ -11,6 +11,13 @@
         <item name="android:windowAllowEnterTransitionOverlap">false</item>
         <item name="android:windowAllowReturnTransitionOverlap">false</item>
     </style>
+
+    <!-- 解决冷启动白屏 -->
+    <style name="launcher" parent="Theme.NavApp">
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowBackground">@drawable/splash</item>
+    </style>
+
     <style name="materialButton" parent="Widget.MaterialComponents.Button">
         <item name="android:paddingLeft">8dp</item>
         <item name="android:paddingRight">8dp</item>

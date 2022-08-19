@@ -21,6 +21,7 @@ import com.passion.navapp.ui.login.UserManager;
 import com.passion.navapp.utils.AppConfig;
 import com.passion.navapp.utils.NavGraphBuilder;
 import com.passion.navapp.utils.PermissionUtils;
+import com.passion.navapp.utils.StatusBar;
 import com.passion.navapp.view.AppBottomBar;
 import com.tencent.tauth.Tencent;
 
@@ -35,6 +36,10 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // 由于启动时设置了R.style.launcher下的windowBackground属性，势必要在进入主页后把窗口背景清理掉
+        setTheme(R.style.Theme_NavApp);
+
+        StatusBar.fitSystemBar(this);
         super.onCreate(savedInstanceState);
         mBinding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(mBinding.getRoot());

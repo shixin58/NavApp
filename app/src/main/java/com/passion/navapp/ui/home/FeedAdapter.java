@@ -9,13 +9,17 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.databinding.ViewDataBinding;
 import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.Observer;
 import androidx.paging.PagedListAdapter;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.passion.libcommon.extension.LiveDataBus;
 import com.passion.navapp.databinding.LayoutFeedTypeImageBinding;
 import com.passion.navapp.databinding.LayoutFeedTypeVideoBinding;
 import com.passion.navapp.model.Feed;
+import com.passion.navapp.ui.InteractionPresenter;
+import com.passion.navapp.ui.detail.FeedDetailActivity;
 import com.passion.navapp.view.ListPlayerView;
 
 public class FeedAdapter extends PagedListAdapter<Feed, FeedAdapter.ViewHolder> {
@@ -24,6 +28,7 @@ public class FeedAdapter extends PagedListAdapter<Feed, FeedAdapter.ViewHolder> 
     private final Context mContext;
 
     protected FeedAdapter(Context context, String category) {
+        // 差分回调DiffUtil.ItemCallback由具体类传入，需重写model类equals方法
         super(new DiffUtil.ItemCallback<Feed>(){
             @Override
             public boolean areItemsTheSame(@NonNull Feed oldItem, @NonNull Feed newItem) {
@@ -61,7 +66,43 @@ public class FeedAdapter extends PagedListAdapter<Feed, FeedAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.bindData(getItem(position));
+        final Feed feed = getItem(position);
+        holder.bindData(feed);
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int pos = holder.getAdapterPosition();
+                if (pos != RecyclerView.NO_POSITION) {
+                    // 视频详情页无缝续播用到mCategory
+                    FeedDetailActivity.openActivity(mContext, getItem(pos), mCategory);
+                    if (mFeedObserver == null) {
+                        mFeedObserver = new FeedObserver();
+                        LiveDataBus.get()
+                                .with(InteractionPresenter.DATA_FROM_INTERACTION)
+                                .observe((LifecycleOwner) mContext, mFeedObserver);
+                    }
+                    mFeedObserver.setFeed(feed);
+                }
+            }
+        });
+    }
+
+    private FeedObserver mFeedObserver;
+
+    private static class FeedObserver implements Observer<Feed> {
+        private Feed mFeed;
+
+        @Override
+        public void onChanged(Feed newOne) {
+            if (mFeed.id != newOne.id) return;
+            mFeed.author = newOne.author;
+            mFeed.ugc = newOne.ugc;
+            mFeed.notifyChange();
+        }
+
+        public void setFeed(Feed feed) {
+            mFeed = feed;
+        }
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

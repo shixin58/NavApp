@@ -5,8 +5,10 @@
       <map>
         <entry key="../../.gradle/caches/transforms-2/files-2.1/f92d83de1e6ed0fe99d83fd71fb51016/jetified-exoplayer-ui-2.14.0/res/layout/exo_player_control_view.xml" value="0.3923076923076923" />
         <entry key="../../.gradle/caches/transforms-2/files-2.1/f92d83de1e6ed0fe99d83fd71fb51016/jetified-exoplayer-ui-2.14.0/res/layout/exo_player_view.xml" value="0.3923076923076923" />
+        <entry key="app/src/main/res/drawable/bg_edit_view.xml" value="0.1365" />
         <entry key="app/src/main/res/drawable/list_divider.xml" value="0.1945" />
         <entry key="app/src/main/res/drawable/splash.xml" value="0.214" />
+        <entry key="app/src/main/res/layout/activity_feed_detail_type_image.xml" value="0.22" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.3546875" />
         <entry key="app/src/main/res/layout/activity_publish.xml" value="0.37592592592592594" />
@@ -18,6 +20,10 @@
         <entry key="app/src/main/res/layout/layout_exo_player_controller_view.xml" value="0.3912820512820513" />
         <entry key="app/src/main/res/layout/layout_exo_player_view.xml" value="0.25555555555555554" />
         <entry key="app/src/main/res/layout/layout_feed_author.xml" value="0.3203125" />
+        <entry key="app/src/main/res/layout/layout_feed_comment_list_item.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/layout_feed_detail_author_info.xml" value="0.3536458333333333" />
+        <entry key="app/src/main/res/layout/layout_feed_detail_bottom_interaction.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/layout_feed_detail_type_image_header.xml" value="0.25" />
         <entry key="app/src/main/res/layout/layout_feed_interaction.xml" value="0.1" />
         <entry key="app/src/main/res/layout/layout_feed_tag.xml" value="0.5" />
         <entry key="app/src/main/res/layout/layout_feed_text.xml" value="0.31927083333333334" />

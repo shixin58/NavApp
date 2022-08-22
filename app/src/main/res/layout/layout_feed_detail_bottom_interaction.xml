@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="feed"
+            type="com.passion.navapp.model.Feed" />
+        <variable
+            name="fullscreen"
+            type="Boolean" />
+        <variable
+            name="owner"
+            type="androidx.lifecycle.LifecycleOwner" />
+        <import type="android.view.View" />
+        <import type="com.passion.navapp.ui.InteractionPresenter"/>
+        <import type="android.content.Context"/>
+    </data>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_48"
+        android:background="@{fullscreen?@color/transparent:@color/color_white}">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/color_divider"
+            android:visibility="@{fullscreen?View.INVISIBLE:View.VISIBLE}" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/input_view"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="4"
+                android:layout_marginStart="@dimen/dp_16"
+                android:layout_marginEnd="@dimen/dp_16"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp"
+                android:textColor="@{fullscreen?@color/color_white:@color/color_333}"
+                android:textColorHint="@{fullscreen?@color/color_white:@color/color_333}"
+                android:hint="@string/feed_detail_hint"
+                android:paddingStart="@dimen/dp_10"
+                android:background="@drawable/bg_edit_view"
+                android:textSize="12sp"
+                android:gravity="center_vertical" />
+
+            <!-- 点赞按钮 -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:onClick="@{()->InteractionPresenter.toggleFeedLike(owner,feed)}"
+                android:gravity="center">
+
+                <!-- android:backgroundTint对图标着色。TextView没法对CompoundDrawable着色 -->
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:background="@{feed.ugc.hasLiked?@drawable/icon_cell_liked:@drawable/icon_cell_like}"
+                    android:backgroundTint="@{feed.ugc.hasLiked?@color/color_theme:fullscreen?@color/color_white:@color/color_666}"
+                    tools:src="@drawable/icon_cell_liked" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:gravity="center"
+                    android:textColor="@{feed.ugc.hasLiked?@color/color_theme:fullscreen?@color/color_white:@color/color_666}"
+                    android:textSize="@dimen/sp_12"
+                    android:text="@{feed.ugc.likeCount>0?String.valueOf(feed.ugc.likeCount):@string/like}"
+                    tools:text="赞" />
+            </LinearLayout>
+
+            <!-- 收藏按钮 -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:onClick="@{()->InteractionPresenter.toggleFeedFavorite(owner,feed)}"
+                android:gravity="center">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:background="@{feed.ugc.hasFavorite?@drawable/ic_collected:@drawable/ic_collect}"
+                    android:backgroundTint="@{feed.ugc.hasLiked?@color/color_theme:fullscreen?@color/color_white:@color/color_666}"
+                    tools:src="@drawable/ic_collected" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:gravity="center"
+                    android:textColor="@{feed.ugc.hasFavorite?@color/color_theme:fullscreen?@color/color_white:@color/color_666}"
+                    android:textSize="@dimen/sp_12"
+                    android:text="@{feed.ugc.hasFavorite?@string/collected:@string/collect}"
+                    tools:text="已收藏" />
+            </LinearLayout>
+
+            <!-- 分享按钮 -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:onClick="@{()->InteractionPresenter.openShare((Context)owner,feed)}"
+                android:gravity="center">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:background="@drawable/icon_cell_share"
+                    android:backgroundTint="@{fullscreen?@color/color_white:@color/color_666}" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:gravity="center"
+                    android:textColor="@{fullscreen?@color/color_white:@color/color_666}"
+                    android:textSize="@dimen/sp_12"
+                    android:text="@string/share" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</layout>

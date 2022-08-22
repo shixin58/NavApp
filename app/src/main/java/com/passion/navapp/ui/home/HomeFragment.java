@@ -33,6 +33,7 @@ public class HomeFragment extends AbsListFragment<Feed,HomeViewModel> {
 
     @Override
     protected void afterViewCreated() {
+        // onViewCreated()之后订阅cacheLiveData
         mViewModel.getCacheLiveData().observe(this, feeds -> {
             mAdapter.submitList(feeds);
         });
@@ -94,7 +95,9 @@ public class HomeFragment extends AbsListFragment<Feed,HomeViewModel> {
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
         // 手动下拉刷新，触发页面初始化数据加载
-        // invalidate()之后Paging会重新创建一个DataSource和PagedList, 在PagedList()调用DataSource#loadInitial()方法加载初始化数据
+        // 1）首次调用compute()时注册InvalidatedCallback: dataSourceFactory.create()->mDataSource.addInvalidatedCallback(mCallback)
+        // 2）DataSource#invalidate()触发InvalidatedCallback#onInvalidated()->ComputableLiveData#invalidate()
+        // 3）当有活跃的观察者时触发compute()，之后Paging会重新创建一个DataSource和PagedList, 在PagedList()调用DataSource#loadInitial()方法加载初始化数据
         // 详情见LivePagedListBuilder#compute()方法
         mViewModel.getDataSource().invalidate();
     }

@@ -25,8 +25,8 @@ import java.io.Serializable;
  * cover :
  */
 public class Feed extends BaseObservable implements Serializable {
-    public static final int TYPE_IMAGE_TEXT = 1;//图文
-    public static final int TYPE_VIDEO = 2;//视频
+    public static final int TYPE_IMAGE_TEXT = 1;// 图文
+    public static final int TYPE_VIDEO = 2;// 视频
 
     public int id;
     public long itemId;

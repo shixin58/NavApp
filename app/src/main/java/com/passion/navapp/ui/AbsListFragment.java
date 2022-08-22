@@ -73,8 +73,10 @@ public abstract class AbsListFragment<T,M extends AbsViewModel<T>> extends Fragm
             Type argument = arguments[1];
             Class modelClazz = ((Class) argument).asSubclass(AbsViewModel.class);
             mViewModel = (M) ViewModelProviders.of(this).get(modelClazz);
-            // 触发页面初始化数据加载
+
+            // 调用LiveData#observe()触发页面初始化数据加载Observer#onChanged()
             mViewModel.getPageData().observe(getViewLifecycleOwner(), this::submitList);
+
             // 监听分页有无更多数据，来决定是否关闭上来加载动画
             mViewModel.getBoundaryPageData().observe(getViewLifecycleOwner(), this::finishRefresh);
         }

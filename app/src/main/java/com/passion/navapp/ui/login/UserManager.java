@@ -1,5 +1,6 @@
 package com.passion.navapp.ui.login;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
@@ -49,6 +50,10 @@ public class UserManager {
      */
     public LiveData<User> login(Context ctx) {
         Intent intent = new Intent(ctx, LoginActivity.class);
+        // AndroidRuntimeException: Calling startActivity() from outside of an Activity  context requires the FLAG_ACTIVITY_NEW_TASK flag
+        if (!(ctx instanceof Activity)) {
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        }
         ctx.startActivity(intent);
         return userLiveData;
     }

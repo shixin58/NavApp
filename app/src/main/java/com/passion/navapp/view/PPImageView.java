@@ -86,8 +86,13 @@ public class PPImageView extends AppCompatImageView {
             finalHeight = maxHeight;
             finalWidth = (int) (width/(height*1.0f/finalHeight));
         }
-        ViewGroup.MarginLayoutParams lp = new ViewGroup.MarginLayoutParams(finalWidth, finalHeight);
-        lp.leftMargin = width>=height?0: PixUtils.dp2Px(marginLeft);
-        setLayoutParams(lp);
+        ViewGroup.LayoutParams params = getLayoutParams();
+        params.width = finalWidth;
+        params.height = finalHeight;
+        // FrameLayout/LinearLayout/ConstraintLayout.LayoutParams均是ViewGroup.MarginLayoutParams子类
+        if (params instanceof ViewGroup.MarginLayoutParams) {
+            ((ViewGroup.MarginLayoutParams)params).leftMargin = width>=height?0: PixUtils.dp2Px(marginLeft);
+        }
+        setLayoutParams(params);
     }
 }

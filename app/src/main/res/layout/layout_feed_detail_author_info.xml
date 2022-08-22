@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="feed"
+            type="com.passion.navapp.model.Feed" />
+        <variable
+            name="leftMargin"
+            type="Integer" />
+        <variable
+            name="fullscreen"
+            type="Boolean" />
+        <variable
+            name="owner"
+            type="androidx.lifecycle.LifecycleOwner" />
+        <import type="com.passion.navapp.utils.TimeUtils"/>
+        <import type="com.passion.navapp.ui.InteractionPresenter"/>
+    </data>
+
+    <!-- marginStart对DataBinding异常 -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="@{leftMargin}"
+        android:paddingTop="@dimen/dp_3"
+        android:paddingBottom="@dimen/dp_3"
+        android:background="@color/transparent">
+
+        <!-- 找不到教材里的icon_splash_text -->
+        <com.passion.navapp.view.PPImageView
+            android:id="@+id/author_avatar"
+            android:layout_width="@dimen/dp_40"
+            android:layout_height="@dimen/dp_40"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginTop="@dimen/dp_2"
+            app:imageUrl="@{feed.author.avatar}"
+            app:isCircle="@{true}"
+            tools:src="@mipmap/ic_launcher_round"/>
+
+        <TextView
+            android:id="@+id/author_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@id/author_avatar"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="@dimen/dp_10"
+            android:layout_marginTop="@dimen/dp_2"
+            android:textSize="@dimen/sp_14"
+            android:textStyle="bold"
+            android:text="@{feed.author.name}"
+            tools:text="神秘的皮皮虾"/>
+
+        <TextView
+            android:id="@+id/create_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@id/author_avatar"
+            app:layout_constraintTop_toBottomOf="@id/author_name"
+            android:layout_marginStart="@dimen/dp_10"
+            android:layout_marginTop="@dimen/dp_2"
+            android:textSize="@dimen/sp_12"
+            android:textStyle="normal"
+            android:text="@{TimeUtils.calculate(feed.createTime)}"
+            tools:text="3天前"/>
+
+        <!-- app:backgroundTint对DataBinding异常 -->
+        <com.google.android.material.button.MaterialButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginEnd="@dimen/dp_16"
+            android:onClick="@{()->InteractionPresenter.toggleFollowUser(owner,feed)}"
+            android:paddingStart="@dimen/dp_16"
+            android:paddingEnd="@dimen/dp_16"
+            android:paddingTop="@dimen/dp_5"
+            android:paddingBottom="@dimen/dp_5"
+            android:textSize="@dimen/sp_14"
+            android:textColor="@color/color_white"
+            android:backgroundTint="@{fullscreen?@color/transparent:@color/color_theme}"
+            app:cornerRadius="@dimen/dp_13"
+            app:strokeWidth="@dimen/dp_2"
+            app:strokeColor="@color/color_white"
+            android:gravity="center"
+            android:text="@{feed.author.hasFollow?@string/followed:@string/follow}"
+            tools:backgroundTint="@color/color_theme"
+            tools:text="已关注"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

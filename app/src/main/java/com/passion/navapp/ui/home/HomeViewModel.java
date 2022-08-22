@@ -28,6 +28,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class HomeViewModel extends AbsViewModel<Feed> {
     // 默认true，volatile多线程有序性和可见性
     private volatile boolean withCache = true;
+    // 区别于pageData，专为cache定义的LiveData
     private final MutableLiveData<PagedList<Feed>> cacheLiveData = new MutableLiveData<>();
     private String mFeedType;
     private final AtomicBoolean loadAfter = new AtomicBoolean(false);
@@ -94,6 +95,7 @@ public class HomeViewModel extends AbsViewModel<Feed> {
                     MutableDataSource<Integer,Feed> dataSource = new MutableDataSource<>();
                     dataSource.data.addAll(list);
 
+                    // PagedList构建时触发DataSource#loadInitial()
                     PagedList<Feed> pagedList = dataSource.buildNewPagedList(config);
                     cacheLiveData.postValue(pagedList);
                 }

@@ -12,7 +12,7 @@
             type="androidx.lifecycle.LifecycleOwner" />
 
         <import type="com.passion.navapp.utils.StringConverter" />
-        <import type="com.passion.navapp.ui.home.InteractionPresenter" />
+        <import type="com.passion.navapp.ui.InteractionPresenter" />
         <import type="android.content.Context" />
     </data>
 

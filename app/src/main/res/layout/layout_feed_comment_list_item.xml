@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="comment"
+            type="com.passion.navapp.model.Comment" />
+        <variable
+            name="owner"
+            type="androidx.lifecycle.LifecycleOwner" />
+        <import type="android.text.TextUtils" />
+        <import type="android.view.View" />
+        <import type="com.passion.navapp.ui.login.UserManager" />
+        <import type="com.passion.navapp.utils.TimeUtils" />
+        <import type="com.passion.navapp.ui.InteractionPresenter" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/dp_10">
+
+        <com.passion.navapp.view.PPImageView
+            android:id="@+id/author_avatar"
+            android:layout_width="@dimen/dp_40"
+            android:layout_height="@dimen/dp_40"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_16"
+            app:imageUrl="@{comment.author.avatar}"
+            app:isCircle="@{true}"
+            tools:src="@mipmap/ic_launcher_round"/>
+
+        <TextView
+            android:id="@+id/author_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@id/author_avatar"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_16"
+            android:textColor="@color/color_000"
+            android:textSize="@dimen/sp_12"
+            android:text="@{comment.author.name}"
+            tools:text="神秘的皮皮虾"/>
+
+        <!-- 由于列表快速滚动，DataBinding会延迟一帧，所以label显示/隐藏在Java代码里控制 -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/label_author"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_14"
+            app:layout_constraintStart_toEndOf="@id/author_name"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="@dimen/dp_10"
+            android:layout_marginTop="@dimen/dp_16"
+            android:textColor="@color/color_white"
+            android:textSize="@dimen/sp_10"
+            android:paddingStart="@dimen/dp_5"
+            android:paddingEnd="@dimen/dp_5"
+            android:paddingTop="@dimen/dp_0"
+            android:paddingBottom="@dimen/dp_0"
+            app:cornerRadius="@dimen/dp_4"
+            app:backgroundTint="@color/color_theme"
+            android:text="@string/author"/>
+
+        <TextView
+            android:id="@+id/create_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@id/label_author"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="@dimen/dp_10"
+            android:layout_marginTop="@dimen/dp_16"
+            android:textColor="@color/color_999"
+            android:textSize="@dimen/sp_12"
+            android:text="@{TimeUtils.calculate(comment.createTime)}"
+            tools:text="100天前"/>
+
+        <TextView
+            android:id="@+id/comment_like"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginEnd="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_16"
+            android:onClick="@{()->InteractionPresenter.toggleCommentLike(owner,comment)}"
+            android:gravity="center"
+            android:textColor="@{comment.ugc.hasLiked?@color/color_theme:@color/color_999}"
+            android:textSize="@dimen/sp_10"
+            android:drawableEnd="@{comment.ugc.hasLiked?@drawable/icon_cell_liked:@drawable/icon_cell_like}"
+            android:drawablePadding="@dimen/dp_5"
+            android:text="@{String.valueOf(comment.ugc.likeCount)}"
+            tools:drawableEnd="@drawable/icon_cell_liked"
+            tools:text="1000"/>
+
+        <ImageView
+            android:id="@+id/comment_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_20"
+            app:layout_constraintEnd_toStartOf="@id/comment_like"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginEnd="@dimen/dp_6"
+            android:layout_marginTop="@dimen/dp_16"
+            android:src="@drawable/icon_item_cell_delete"/>
+
+        <TextView
+            android:id="@+id/comment_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@id/author_avatar"
+            app:layout_constraintTop_toBottomOf="@id/author_name"
+            android:layout_marginStart="@dimen/dp_10"
+            android:layout_marginTop="@dimen/dp_5"
+            android:paddingEnd="60dp"
+            android:textColor="@color/color_333"
+            android:textSize="@dimen/sp_14"
+            android:text="@{comment.commentText}"
+            tools:text="comment text"/>
+
+        <FrameLayout
+            android:id="@+id/comment_ext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@id/author_avatar"
+            app:layout_constraintTop_toBottomOf="@id/comment_text"
+            android:layout_marginStart="@dimen/dp_10"
+            android:layout_marginTop="@dimen/dp_10">
+
+            <com.passion.navapp.view.PPImageView
+                android:id="@+id/comment_cover"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/color_theme_10"
+                android:scaleType="center"
+                android:layout_gravity="center"
+                tools:layout_width="200dp"
+                tools:layout_height="200dp"/>
+
+            <ImageView
+                android:id="@+id/video_icon"
+                android:layout_width="@dimen/dp_30"
+                android:layout_height="@dimen/dp_30"
+                android:layout_gravity="center"
+                android:src="@drawable/icon_video_play"/>
+        </FrameLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

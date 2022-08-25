@@ -13,7 +13,7 @@ import com.passion.libnavannotation.FragmentDestination;
 import com.passion.navapp.exoplayer.PageListPlayDetector;
 import com.passion.navapp.model.Feed;
 import com.passion.navapp.ui.AbsListFragment;
-import com.passion.navapp.ui.MutableDataSource;
+import com.passion.navapp.ui.MutablePageKeyedDataSource;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
 
 import java.util.List;
@@ -83,7 +83,8 @@ public class HomeFragment extends AbsListFragment<Feed,HomeViewModel> {
             public void onResult(@NonNull List<Feed> data) {
                 PagedList.Config config = mAdapter.getCurrentList().getConfig();
                 if (!data.isEmpty()) {
-                    MutableDataSource<Integer,Feed> dataSource = new MutableDataSource<>();
+                    MutablePageKeyedDataSource<Integer,Feed> dataSource = new MutablePageKeyedDataSource<>();
+                    dataSource.data.addAll(mAdapter.getCurrentList());
                     dataSource.data.addAll(data);
                     PagedList<Feed> pagedList = dataSource.buildNewPagedList(config);
                     submitList(pagedList);

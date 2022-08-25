@@ -8,6 +8,10 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
+import androidx.paging.ItemKeyedDataSource;
+import androidx.paging.PagedList;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -15,6 +19,8 @@ import com.passion.libcommon.PixUtils;
 import com.passion.libcommon.extension.AbsPagedListAdapter;
 import com.passion.navapp.databinding.LayoutFeedCommentListItemBinding;
 import com.passion.navapp.model.Comment;
+import com.passion.navapp.ui.InteractionPresenter;
+import com.passion.navapp.ui.MutableItemKeyedDataSource;
 import com.passion.navapp.ui.login.UserManager;
 
 public class FeedCommentAdapter extends AbsPagedListAdapter<Comment,FeedCommentAdapter.ViewHolder> {
@@ -51,6 +57,34 @@ public class FeedCommentAdapter extends AbsPagedListAdapter<Comment,FeedCommentA
     protected void onBindViewHolder2(ViewHolder holder, int position) {
         Comment comment = getItem(position);
         holder.bindData(comment);
+        holder.mBinding.commentDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LiveData<Boolean> liveData = InteractionPresenter.deleteFeedComment(mContext, comment.itemId, comment.commentId);
+                liveData.observe((LifecycleOwner) mContext, new Observer<Boolean>() {
+                    @Override
+                    public void onChanged(Boolean success) {
+                        if (success) {
+                            PagedList<Comment> currentList = getCurrentList();
+                            MutableItemKeyedDataSource<Integer,Comment> itemKeyedDataSource = new MutableItemKeyedDataSource<Integer, Comment>((ItemKeyedDataSource) currentList.getDataSource()) {
+                                @NonNull
+                                @Override
+                                public Integer getKey(@NonNull Comment item) {
+                                    return item.id;
+                                }
+                            };
+                            for (Comment c:currentList) {
+                                if (c.id != comment.id) {
+                                    itemKeyedDataSource.data.add(c);
+                                }
+                            }
+                            PagedList<Comment> newPagedList = itemKeyedDataSource.buildNewPagedList(currentList.getConfig());
+                            submitList(newPagedList);
+                        }
+                    }
+                });
+            }
+        });
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {

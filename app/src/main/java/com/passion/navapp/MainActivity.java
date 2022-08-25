@@ -29,6 +29,19 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+/**
+ * LiveData数据倒灌：
+ * <p>1）旋转屏幕或切换系统语言导致Activity重建；
+ * <p>2）页面重建时，重新observe()，observer.mLastVersion重置为-1，但ViewModel保存之前数据，LiveData.mVersion恢复为重建前的值；
+ * <p>3）Activity可见时，LiveData自动发送最后一条数据。<p>
+ *
+ * <p>杀后台不走onDestroy()和onRetainCustomNonConfigurationInstance()，不会造成数据倒灌。
+ * <p>正常流程: setValue(T)->dispatchingValue(null)->considerNotify()->Observer#onChange()<p>
+ *
+ * <p>SingleLiveEvent修复了数据倒灌。用覆写observe方法和compareAndSet(true, false)保证只发送1次，非显式调用setValue不分发onChanged()。
+ * <p>LiveData.LifecycleBoundObserver#onStateChanged()->activeStateChanged()
+ * <p>->LiveData.dispatchingValue(LifecycleBoundObserver)->considerNotify()->Observer#onChange()
+ */
 public class MainActivity extends AppCompatActivity implements NavigationBarView.OnItemSelectedListener {
     private ActivityMainBinding mBinding;
     private NavController navController;

@@ -1,11 +1,14 @@
 package com.passion.navapp.ui.detail;
 
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.CallSuper;
+import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.paging.ItemKeyedDataSource;
 import androidx.paging.PagedList;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,6 +18,7 @@ import com.passion.navapp.R;
 import com.passion.navapp.databinding.LayoutFeedDetailBottomInteractionBinding;
 import com.passion.navapp.model.Comment;
 import com.passion.navapp.model.Feed;
+import com.passion.navapp.ui.MutableItemKeyedDataSource;
 
 // 图文详情页和视频详情页相同的功能在基类完成。
 // 评论列表和底部互动区域
@@ -25,6 +29,7 @@ public abstract class ViewHandler {
     protected LayoutFeedDetailBottomInteractionBinding mBottomInteractionBinding;
     protected FeedCommentAdapter mCommentAdapter;
     protected FeedDetailViewModel viewModel;
+    private CommentDialog mCommentDialog;
 
     public ViewHandler(FragmentActivity activity) {
         mActivity = activity;
@@ -52,6 +57,35 @@ public abstract class ViewHandler {
             public void onChanged(PagedList<Comment> comments) {
                 mCommentAdapter.submitList(comments);
                 handleEmpty(!comments.isEmpty());
+            }
+        });
+        mBottomInteractionBinding.inputView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mCommentDialog == null) {
+                    mCommentDialog = CommentDialog.newInstance(mFeed.itemId);
+                }
+                mCommentDialog.setCommentAddListener(new CommentDialog.CommentAddListener() {
+                    @Override
+                    public void onAddComment(Comment comment) {
+                        // 将Comment添加到评论列表头部
+                        MutableItemKeyedDataSource<Integer,Comment> mutableItemKeyedDataSource =
+                                new MutableItemKeyedDataSource<Integer, Comment>((ItemKeyedDataSource) viewModel.getDataSource()) {
+                            @NonNull
+                            @Override
+                            public Integer getKey(@NonNull Comment item) {
+                                return item.id;
+                            }
+                        };
+                        mutableItemKeyedDataSource.data.add(comment);
+                        // PagedList继承AbstractList，AbstractList实现List接口。它是Collection子类，拥有Iterator。
+                        mutableItemKeyedDataSource.data.addAll(mCommentAdapter.getCurrentList());
+                        PagedList.Config config = mCommentAdapter.getCurrentList().getConfig();
+                        PagedList<Comment> pagedList = mutableItemKeyedDataSource.buildNewPagedList(config);
+                        mCommentAdapter.submitList(pagedList);
+                    }
+                });
+                mCommentDialog.show(mActivity.getSupportFragmentManager(), CommentDialog.class.getName());
             }
         });
     }

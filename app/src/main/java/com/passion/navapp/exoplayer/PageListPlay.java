@@ -21,17 +21,20 @@ public class PageListPlay {
     public SimpleExoPlayer mExoPlayer;
     public PlayerView mPlayerView;
     public PlayerControlView mControlView;
+
     public PlayerControlView.VisibilityListener mVisibilityListener;
     public String playUrl;
 
     public PageListPlay() {
+        // MediaExtractor将音视频分离，跟MediaCodec一起用于视频解码播放。
+        // MediaMuxer生成音频或视频文件，将视频track和音频track合成音视频文件。
         Application app = AppGlobals.getApplication();
         // ExoPlayerFactory在v2.14.0被移除
         mExoPlayer = new SimpleExoPlayer.Builder(app,
-                new DefaultRenderersFactory(app)/*视频帧画面渲染器*/,
-                new DefaultTrackSelector(app)/*音视频轨道选择器*/,
+                new DefaultRenderersFactory(app)/* 视频帧画面渲染器集合工厂类，调用createRenderers()创建Renderer[] */,
+                new DefaultTrackSelector(app)/* 音视频轨道选择器 */,
                 new DefaultMediaSourceFactory(app, new DefaultExtractorsFactory()),
-                new DefaultLoadControl()/*buffer加载到缓存控制器*/,
+                new DefaultLoadControl()/* buffer加载到缓存控制器 */,
                 DefaultBandwidthMeter.getSingletonInstance(app),
                 new AnalyticsCollector(Clock.DEFAULT))
                 .build();
@@ -47,6 +50,7 @@ public class PageListPlay {
     }
 
     public void release() {
+        // 销毁播放器
         if (mExoPlayer != null) {
             mExoPlayer.setPlayWhenReady(false);
             mExoPlayer.stop(true);

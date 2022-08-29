@@ -65,4 +65,17 @@ dependencies {
     api "com.google.android.exoplayer:exoplayer-core:$exo_player_version"
     api "com.google.android.exoplayer:exoplayer-dash:$exo_player_version"
     api "com.google.android.exoplayer:exoplayer-ui:$exo_player_version"
+
+    // 引入CameraX
+    // v1.0.0-alpha04到v1.0.0变化很大，暂不升级至v1.1.0
+    api "androidx.camera:camera-core:1.0.0-alpha04"
+    api "androidx.camera:camera-camera2:1.0.0-alpha04"
+    api "androidx.camera:camera-view:1.0.0-alpha01"
+    api "androidx.camera:camera-extensions:1.0.0-alpha01"
+
+    // 全屏预览拍照效果
+    api "com.github.chrisbanes:PhotoView:2.3.0@aar"
+
+    // 文件上传用aliyun oss
+    api "com.aliyun.dpa:oss-android-sdk:+"
 }

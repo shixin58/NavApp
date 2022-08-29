@@ -13,6 +13,8 @@ public class FeedDetailActivity extends AppCompatActivity {
     private static final String KEY_FEED = "key_feed";
     private static final String KEY_CATEGORY = "key_category";
 
+    private ViewHandler mViewHandler;
+
     // Feed binder跨进程传递，经过序列化和反序列化，列表和详情不再是同个对象，改了数据不会自动同步
     public static void openActivity(Context context, Feed item, String category) {
         Intent intent = new Intent(context, FeedDetailActivity.class);
@@ -30,12 +32,19 @@ public class FeedDetailActivity extends AppCompatActivity {
             return;
         }
 
-        ViewHandler viewHandler;
         if (feed.itemType == Feed.TYPE_IMAGE_TEXT) {
-            viewHandler = new ImageViewHandler(this);
+            mViewHandler = new ImageViewHandler(this);
         } else {
-            viewHandler = new VideoViewHandler(this);
+            mViewHandler = new VideoViewHandler(this);
         }
-        viewHandler.bindInitData(feed);
+        mViewHandler.bindInitData(feed);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (mViewHandler != null) {
+            mViewHandler.onActivityResult(requestCode, resultCode, data);
+        }
     }
 }

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!-- CameraX需要添加TextureView来显示视频流。CameraView已包含，不需要 -->
+        <TextureView
+            android:id="@+id/texture_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|bottom"
+            android:layout_marginBottom="200dp"
+            android:textColor="@color/color_white"
+            android:text="@string/capture_tips" />
+
+        <com.passion.navapp.view.RecordView
+            android:id="@+id/record_view"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center_horizontal|bottom"
+            android:layout_marginBottom="@dimen/dp_60"
+            app:duration="10"
+            app:fill_color="@color/color_white"
+            app:progress_color="@color/color_theme"
+            app:progress_width="@dimen/dp_4"
+            app:radius="@dimen/dp_40" />
+    </FrameLayout>
+</layout>

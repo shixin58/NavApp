@@ -22,6 +22,11 @@
         <item name="android:windowFullscreen">true</item>
     </style>
 
+    <style name="capture" parent="Theme.NavApp">
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowBackground">@color/black</item>
+    </style>
+
     <style name="materialButton" parent="Widget.MaterialComponents.Button">
         <item name="android:paddingLeft">8dp</item>
         <item name="android:paddingRight">8dp</item>

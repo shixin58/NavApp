@@ -20,35 +20,42 @@ import java.util.HashMap;
 public class PageListPlayManager {
     // 管理多个页面的PageListPlay
     private static final HashMap<String,PageListPlay> sPageListPlayMap = new HashMap<>();
+
     private static final ProgressiveMediaSource.Factory sMediaSourceFactory;
 
     static {
         Application app = AppGlobals.getApplication();
-        // HttpDataSource根据url下载视频
+        // 创建HttpDataSource工厂类，用于根据url下载视频
         DefaultHttpDataSource.Factory dataSourceFactory = new DefaultHttpDataSource.Factory()
                 .setUserAgent(Util.getUserAgent(app, app.getPackageName()));
 
-        // 缓存位置和大小(200MB)
+        // 创建Cache，用于保存缓存位置、大小(200MB)和策略
         // evictor清除者/逐出者，LRU算法
         Cache cache = new SimpleCache(app.getCacheDir(),
-                new LeastRecentlyUsedCacheEvictor(1024*1024*200));
+                new LeastRecentlyUsedCacheEvictor(1024 * 1024 * 200));
 
-        // 缓存写入
+        // 创建缓存数据池工厂类，用于缓存写入
         CacheDataSink.Factory cacheWriteDataSinkFactory = new CacheDataSink.Factory()
                 .setCache(cache)
                 .setFragmentSize(Long.MAX_VALUE);
 
-        // 查询本地缓存工厂类
+        // 创建缓存数据源工厂类，用于查询本地缓存
         CacheDataSource.Factory cacheDataSourceFactory = new CacheDataSource.Factory()
                 .setCache(cache)
                 .setUpstreamDataSourceFactory(dataSourceFactory)
                 .setCacheReadDataSourceFactory(new FileDataSource.Factory())
                 .setCacheWriteDataSinkFactory(cacheWriteDataSinkFactory)
-                .setEventListener(null)
+                .setEventListener(new CacheDataSource.EventListener() {
+                    @Override
+                    public void onCachedBytesRead(long cacheSizeBytes, long cachedBytesRead) {}
+
+                    @Override
+                    public void onCacheIgnored(int reason) {}
+                })
                 // 查询本地缓存文件时，网络输入流正在写入该文件，等待写完再读取缓存
                 .setFlags(CacheDataSource.FLAG_BLOCK_ON_CACHE);
 
-        // 根据视频url创建Media数据源，供播放器使用
+        // 根据视频url创建媒体源MediaSource，供播放器使用
         sMediaSourceFactory = new ProgressiveMediaSource.Factory(cacheDataSourceFactory);
     }
 

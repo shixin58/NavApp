@@ -16,7 +16,9 @@ public class ViewHelper {
     public static void setViewOutline(View v, AttributeSet set, int defStyleAttr, int defStyleRes) {
         TypedArray typedArray = v.getContext()
                 .obtainStyledAttributes(set, R.styleable.ViewOutlineStrategy, defStyleAttr, defStyleRes);
+        // format=dimension
         int radius = typedArray.getDimensionPixelOffset(R.styleable.ViewOutlineStrategy_radius, 0);
+        // format=enum
         int radiusSide = typedArray.getIndex(R.styleable.ViewOutlineStrategy_radiusSide);
         typedArray.recycle();
 

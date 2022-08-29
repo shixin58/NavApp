@@ -1,5 +1,6 @@
 package com.passion.navapp.ui.detail;
 
+import android.app.Activity;
 import android.content.Context;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -22,6 +23,7 @@ import com.passion.navapp.model.Comment;
 import com.passion.navapp.ui.InteractionPresenter;
 import com.passion.navapp.ui.MutableItemKeyedDataSource;
 import com.passion.navapp.ui.login.UserManager;
+import com.passion.navapp.ui.publish.PreviewActivity;
 
 public class FeedCommentAdapter extends AbsPagedListAdapter<Comment,FeedCommentAdapter.ViewHolder> {
     private final Context mContext;
@@ -83,6 +85,14 @@ public class FeedCommentAdapter extends AbsPagedListAdapter<Comment,FeedCommentA
                         }
                     }
                 });
+            }
+        });
+        holder.mBinding.commentCover.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boolean isVideo = comment.commentType == Comment.COMMENT_TYPE_VIDEO;
+                PreviewActivity.openActivityForResult((Activity) mContext,
+                        isVideo? comment.videoUrl : comment.imageUrl, isVideo, null);
             }
         });
     }

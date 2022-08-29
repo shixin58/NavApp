@@ -17,6 +17,8 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.passion.libcommon.PixUtils;
 
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
+
 public class PPImageView extends AppCompatImageView {
     public PPImageView(@NonNull Context context) {
         super(context);
@@ -30,14 +32,26 @@ public class PPImageView extends AppCompatImageView {
         super(context, attrs, defStyleAttr);
     }
 
-    @BindingAdapter(value = {"imageUrl", "isCircle"}, requireAll = false)
+    public void setImageUrl(String imageUrl) {
+        setImageUrl(this, imageUrl, false, 0);
+    }
+
+    @BindingAdapter(value = {"imageUrl", "isCircle"}, requireAll = true)
     public static void setImageUrl(PPImageView imageView, String imageUrl, boolean isCircle) {
+        setImageUrl(imageView, imageUrl, isCircle, 0);
+    }
+
+    @BindingAdapter(value = {"imageUrl", "isCircle", "radius"}, requireAll = false)
+    public static void setImageUrl(PPImageView imageView, String imageUrl, boolean isCircle, int radius) {
 //        imageView.getContext()，仅用View提供Context
         RequestBuilder<Drawable> builder = Glide.with(imageView)
                 .load(imageUrl);
         if (isCircle) {
             // BitmapTransformation子类，Glide内置，实现Transformation#transform()
             builder.transform(new CircleCrop());
+        } else if (radius > 0) {
+            builder.transform(new RoundedCornersTransformation(PixUtils.dp2Px(radius), 0,
+                    RoundedCornersTransformation.CornerType.ALL));
         }
         ViewGroup.LayoutParams layoutParams = imageView.getLayoutParams();
         if (layoutParams != null && layoutParams.width > 0 && layoutParams.height > 0) {

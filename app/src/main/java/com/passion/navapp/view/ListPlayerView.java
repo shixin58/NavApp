@@ -7,7 +7,6 @@ import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
-import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.FrameLayout;
@@ -203,7 +202,7 @@ public class ListPlayerView extends FrameLayout implements IPlayTarget,
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        // 滑动过程中itemView可能复用，在此做些状态重置
+        // 滑动过程中itemView复用，removeView()后在此做些状态重置
         isPlaying = false;
         bufferView.setVisibility(GONE);
         cover.setVisibility(VISIBLE);

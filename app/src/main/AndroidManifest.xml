@@ -37,6 +37,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.publish.PublishActivity" />
+        <activity android:name=".ui.publish.CaptureActivity"
+            android:theme="@style/capture" />
+        <activity android:name=".ui.publish.PreviewActivity"/>
         <activity
             android:name="com.tencent.tauth.AuthActivity"
             android:exported="true"

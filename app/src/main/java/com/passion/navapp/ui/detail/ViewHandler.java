@@ -25,16 +25,19 @@ import com.passion.navapp.ui.MutableItemKeyedDataSource;
 // 评论列表和底部互动区域
 public abstract class ViewHandler {
     protected final FragmentActivity mActivity;
+    protected FeedDetailViewModel mViewModel;
+
     protected Feed mFeed;
     protected RecyclerView mRecyclerView;
     protected LayoutFeedDetailBottomInteractionBinding mBottomInteractionBinding;
     protected FeedCommentAdapter mCommentAdapter;
-    protected FeedDetailViewModel viewModel;
+
     private CommentDialog mCommentDialog;
+    private EmptyView mEmptyView;
 
     public ViewHandler(FragmentActivity activity) {
         mActivity = activity;
-        viewModel = ViewModelProviders.of(activity).get(FeedDetailViewModel.class);
+        mViewModel = ViewModelProviders.of(activity).get(FeedDetailViewModel.class);
     }
 
     @CallSuper
@@ -47,13 +50,13 @@ public abstract class ViewHandler {
         mCommentAdapter = new FeedCommentAdapter(mActivity);
         mRecyclerView.setAdapter(mCommentAdapter);
 
-        viewModel.setItemId(mFeed.itemId);
+        mViewModel.setItemId(mFeed.itemId);
         // LiveData首次订阅触发onActive，最后1个订阅者被移除触发onInactive()，宿主可见触发dispatchingValue()->onChanged()。
         // 1）调用由LivePagedListBuilder创建的LiveData#observe()首次订阅，会触发onActive()->ComputableLiveData#compute()，
         // 2）compute()内部构建PagedList, ContiguousPagedList()->ContiguousDataSource#dispatchLoadInitial()
         // 3）进而触发ItemKeyedDataSource#loadInitial()下载数据，调用ItemKeyedDataSource.LoadCallback#onResult()回传，
         // 4）调用Observer#onChanged() -> PagedListAdapter#submitList()刷新RecyclerView
-        viewModel.getPageData().observe(mActivity, new Observer<PagedList<Comment>>() {
+        mViewModel.getPageData().observe(mActivity, new Observer<PagedList<Comment>>() {
             @Override
             public void onChanged(PagedList<Comment> comments) {
                 mCommentAdapter.submitList(comments);
@@ -71,7 +74,7 @@ public abstract class ViewHandler {
                     public void onAddComment(Comment comment) {
                         // 将Comment添加到评论列表头部
                         MutableItemKeyedDataSource<Integer,Comment> mutableItemKeyedDataSource =
-                                new MutableItemKeyedDataSource<Integer, Comment>((ItemKeyedDataSource) viewModel.getDataSource()) {
+                                new MutableItemKeyedDataSource<Integer, Comment>((ItemKeyedDataSource) mViewModel.getDataSource()) {
                             @NonNull
                             @Override
                             public Integer getKey(@NonNull Comment item) {
@@ -91,7 +94,6 @@ public abstract class ViewHandler {
         });
     }
 
-    private EmptyView mEmptyView;
     private void handleEmpty(boolean hasData) {
         if (hasData) {
             if (mEmptyView != null) {

@@ -27,6 +27,8 @@ public class FeedAdapter extends PagedListAdapter<Feed, FeedAdapter.ViewHolder> 
     private final String mCategory;
     private final Context mContext;
 
+    private FeedObserver mFeedObserver;
+
     protected FeedAdapter(Context context, String category) {
         // 差分回调DiffUtil.ItemCallback由具体类传入，需重写model类equals方法
         super(new DiffUtil.ItemCallback<Feed>(){
@@ -75,6 +77,7 @@ public class FeedAdapter extends PagedListAdapter<Feed, FeedAdapter.ViewHolder> 
                 if (pos != RecyclerView.NO_POSITION) {
                     // 视频详情页无缝续播用到mCategory
                     FeedDetailActivity.openActivity(mContext, getItem(pos), mCategory);
+                    onStartFeedDetailActivity(feed);
                     if (mFeedObserver == null) {
                         mFeedObserver = new FeedObserver();
                         LiveDataBus.get()
@@ -87,7 +90,7 @@ public class FeedAdapter extends PagedListAdapter<Feed, FeedAdapter.ViewHolder> 
         });
     }
 
-    private FeedObserver mFeedObserver;
+    protected void onStartFeedDetailActivity(Feed feed) {}
 
     private static class FeedObserver implements Observer<Feed> {
         private Feed mFeed;
@@ -95,6 +98,7 @@ public class FeedAdapter extends PagedListAdapter<Feed, FeedAdapter.ViewHolder> 
         @Override
         public void onChanged(Feed newOne) {
             if (mFeed.id != newOne.id) return;
+
             mFeed.author = newOne.author;
             mFeed.ugc = newOne.ugc;
             mFeed.notifyChange();

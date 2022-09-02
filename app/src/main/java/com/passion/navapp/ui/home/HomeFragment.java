@@ -20,8 +20,10 @@ import java.util.List;
 
 @FragmentDestination(pageUrl = "main/tabs/home",asStarter = true)
 public class HomeFragment extends AbsListFragment<Feed,HomeViewModel> {
-    private String feedType;
+    private String mFeedType;
     private PageListPlayDetector mPlayDetector;
+
+    private boolean mShouldPause = true;
 
     public static HomeFragment getInstance(String feedType) {
         HomeFragment fragment = new HomeFragment();
@@ -42,15 +44,15 @@ public class HomeFragment extends AbsListFragment<Feed,HomeViewModel> {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mViewModel.setFeedType(feedType);
+        mViewModel.setFeedType(mFeedType);
         mPlayDetector = new PageListPlayDetector(this, mRecyclerView);
     }
 
     @Override
     public PagedListAdapter getAdapter() {
         Bundle bundle = getArguments();
-        feedType = bundle==null?"all":bundle.getString("feedType");
-        return new FeedAdapter(getContext(), feedType) {
+        mFeedType = bundle==null?"all":bundle.getString("feedType");
+        return new FeedAdapter(getContext(), mFeedType) {
             @Override
             public void onViewAttachedToWindow(@NonNull ViewHolder holder) {
                 super.onViewAttachedToWindow(holder);
@@ -65,6 +67,12 @@ public class HomeFragment extends AbsListFragment<Feed,HomeViewModel> {
                 if (holder.isVideoItem()) {
                     mPlayDetector.removeTarget(holder.getListPlayerView());
                 }
+            }
+
+            @Override
+            protected void onStartFeedDetailActivity(Feed feed) {
+                boolean isVideo = feed.itemType == Feed.TYPE_VIDEO;
+                mShouldPause = !isVideo;
             }
         };
     }
@@ -106,6 +114,7 @@ public class HomeFragment extends AbsListFragment<Feed,HomeViewModel> {
     @Override
     public void onResume() {
         super.onResume();
+        mShouldPause = true;
         if (getParentFragment() != null) {
             if (getParentFragment().isVisible() && isVisible()) {
                 mPlayDetector.onResume();
@@ -119,7 +128,9 @@ public class HomeFragment extends AbsListFragment<Feed,HomeViewModel> {
 
     @Override
     public void onPause() {
-        mPlayDetector.onPause();
+        if (mShouldPause) {
+            mPlayDetector.onPause();
+        }
         super.onPause();
     }
 

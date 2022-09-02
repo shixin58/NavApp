@@ -32,15 +32,17 @@ import com.passion.navapp.exoplayer.PageListPlayManager;
 
 import jp.wasabeef.glide.transformations.BlurTransformation;
 
+// PlayerView和PlayerControlView的父容器，可直接用于列表视频item。
+// 详情页和列表视频控件大小计算规则不同，详情页视频控件可继承ListPlayerView并重写setSize()方法。
 public class ListPlayerView extends FrameLayout implements IPlayTarget,
         PlayerControlView.VisibilityListener, Player.Listener {
-    private final PPImageView blur;
-    private final PPImageView cover;
-    private final ImageView playBtn;
-    private final ProgressBar bufferView;
+    private final PPImageView mBlurView;
+    protected final PPImageView mCoverView;
+    private final ImageView mPlayBtn;
+    private final ProgressBar mBufferView;
 
-    private String mCategory;
-    private String mVideoUrl;
+    protected String mCategory;
+    protected String mVideoUrl;
 
     private boolean isPlaying;
 
@@ -56,12 +58,12 @@ public class ListPlayerView extends FrameLayout implements IPlayTarget,
         super(context, attrs, defStyleAttr);
         LayoutInflater.from(context).inflate(R.layout.layout_player_view, this, true);
 
-        blur = findViewById(R.id.blur_background);
-        cover = findViewById(R.id.cover);
-        playBtn = findViewById(R.id.play_btn);
-        bufferView = findViewById(R.id.buffer_view);
+        mBlurView = findViewById(R.id.blur_background);
+        mCoverView = findViewById(R.id.cover);
+        mPlayBtn = findViewById(R.id.play_btn);
+        mBufferView = findViewById(R.id.buffer_view);
 
-        playBtn.setOnClickListener(v -> {
+        mPlayBtn.setOnClickListener(v -> {
             if (isPlaying()) {
                 inactive();
             } else {
@@ -82,19 +84,21 @@ public class ListPlayerView extends FrameLayout implements IPlayTarget,
         mCategory = category;
         mVideoUrl = videoUrl;
 
-        PPImageView.setImageUrl(cover, coverUrl, false);
+        PPImageView.setImageUrl(mCoverView, coverUrl, false);
+
         if (widthPx < heightPx) {
             setBlurImageUrl(coverUrl, 10);
-            blur.setVisibility(VISIBLE);
+            mBlurView.setVisibility(VISIBLE);
         } else {
-            blur.setVisibility(INVISIBLE);
+            mBlurView.setVisibility(INVISIBLE);
         }
+
         setSize(widthPx, heightPx);
     }
 
-    private void setSize(int widthPx, int heightPx) {
-        int maxWidth = PixUtils.getScreenWidth();
-        int maxHeight = maxWidth;
+    protected void setSize(int widthPx, int heightPx) {
+        final int maxWidth = PixUtils.getScreenWidth();
+        final int maxHeight = maxWidth;
 
         int layoutWidth = maxWidth;
         int layoutHeight = 0;
@@ -116,22 +120,22 @@ public class ListPlayerView extends FrameLayout implements IPlayTarget,
         setLayoutParams(layoutParams);
 
         // 设置背景虚化View大小
-        ViewGroup.LayoutParams blurParams = blur.getLayoutParams();
+        ViewGroup.LayoutParams blurParams = mBlurView.getLayoutParams();
         blurParams.width = layoutWidth;
         blurParams.height = layoutHeight;
-        blur.setLayoutParams(blurParams);
+        mBlurView.setLayoutParams(blurParams);
 
         // 设置封面图View大小
-        LayoutParams coverParams = (LayoutParams) cover.getLayoutParams();
+        LayoutParams coverParams = (LayoutParams) mCoverView.getLayoutParams();
         coverParams.width = coverWidth;
         coverParams.height = coverHeight;
         coverParams.gravity = Gravity.CENTER;
-        cover.setLayoutParams(coverParams);
+        mCoverView.setLayoutParams(coverParams);
 
         // 设置播放按钮居中
-        LayoutParams playBtnParams = (LayoutParams) playBtn.getLayoutParams();
+        LayoutParams playBtnParams = (LayoutParams) mPlayBtn.getLayoutParams();
         playBtnParams.gravity = Gravity.CENTER;
-        playBtn.setLayoutParams(playBtnParams);
+        mPlayBtn.setLayoutParams(playBtnParams);
     }
 
     public void setBlurImageUrl(String coverUrl, int radius) {
@@ -160,14 +164,14 @@ public class ListPlayerView extends FrameLayout implements IPlayTarget,
         if (playerView == null) {
             return;
         }
-
+        pageListPlay.switchPlayerView(playerView);
         ViewParent viewParent = playerView.getParent();
         if (viewParent != this) {
             if (viewParent != null) {
                 ((ViewGroup)viewParent).removeView(playerView);
             }
             // PlayerView位于高斯模糊图之上，大小跟封面图一致
-            ViewGroup.LayoutParams lp = cover.getLayoutParams();
+            ViewGroup.LayoutParams lp = mCoverView.getLayoutParams();
             this.addView(playerView, 1, lp);
         }
 
@@ -204,19 +208,18 @@ public class ListPlayerView extends FrameLayout implements IPlayTarget,
         super.onDetachedFromWindow();
         // 滑动过程中itemView复用，removeView()后在此做些状态重置
         isPlaying = false;
-        bufferView.setVisibility(GONE);
-        cover.setVisibility(VISIBLE);
-        playBtn.setVisibility(VISIBLE);
-        playBtn.setImageResource(R.drawable.icon_video_play);
+        mBufferView.setVisibility(GONE);
+        mCoverView.setVisibility(VISIBLE);
+        mPlayBtn.setVisibility(VISIBLE);
+        mPlayBtn.setImageResource(R.drawable.icon_video_play);
     }
 
     @Override
     public void inactive() {
-        // 暂停播放
         PageListPlay pageListPlay = PageListPlayManager.get(mCategory);
         pageListPlay.mExoPlayer.setPlayWhenReady(false);
-        playBtn.setVisibility(VISIBLE);
-        playBtn.setImageResource(R.drawable.icon_video_play);
+        mPlayBtn.setVisibility(VISIBLE);
+        mPlayBtn.setImageResource(R.drawable.icon_video_play);
     }
 
     @Override
@@ -226,8 +229,8 @@ public class ListPlayerView extends FrameLayout implements IPlayTarget,
 
     @Override
     public void onVisibilityChange(int visibility) {
-        playBtn.setVisibility(visibility);
-        playBtn.setImageResource(isPlaying()?R.drawable.icon_video_pause:R.drawable.icon_video_play);
+        mPlayBtn.setVisibility(visibility);
+        mPlayBtn.setImageResource(isPlaying()?R.drawable.icon_video_pause:R.drawable.icon_video_play);
     }
 
     @Override
@@ -237,14 +240,14 @@ public class ListPlayerView extends FrameLayout implements IPlayTarget,
         SimpleExoPlayer exoPlayer = pageListPlay.mExoPlayer;
         // STATE_READY有可能还未开始播放，需判断缓存区不为0
         if (state == Player.STATE_READY && exoPlayer.getBufferedPosition() != 0) {
-            cover.setVisibility(INVISIBLE);
-            bufferView.setVisibility(INVISIBLE);
+            mCoverView.setVisibility(INVISIBLE);
+            mBufferView.setVisibility(INVISIBLE);
         } else if (state == Player.STATE_BUFFERING) {
-            bufferView.setVisibility(VISIBLE);
+            mBufferView.setVisibility(VISIBLE);
         }
 
         isPlaying = state == Player.STATE_READY && exoPlayer.getBufferedPosition() != 0 && exoPlayer.getPlayWhenReady();
-        playBtn.setImageResource(isPlaying?R.drawable.icon_video_pause:R.drawable.icon_video_play);
+        mPlayBtn.setImageResource(isPlaying?R.drawable.icon_video_pause:R.drawable.icon_video_play);
     }
 
     @Override

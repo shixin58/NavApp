@@ -3,13 +3,20 @@ package com.passion.navapp.exoplayer;
 import android.view.ViewGroup;
 
 public interface IPlayTarget {
-    // PlayerView所在容器，用于计算位置
+    /**
+     * 返回PlayerView/PlayerControlView所在父容器，用于计算位置
+     * @return
+     */
     ViewGroup getOwner();
 
-    // 播放
+    /**
+     * onResume()触发播放
+     */
     void onActive();
 
-    // 停止播放
+    /**
+     * onPause()触发暂停播放
+     */
     void inactive();
 
     boolean isPlaying();

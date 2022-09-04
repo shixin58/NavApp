@@ -27,9 +27,10 @@ public abstract class ViewHandler {
     protected final FragmentActivity mActivity;
     protected FeedDetailViewModel mViewModel;
 
-    protected Feed mFeed;
     protected RecyclerView mRecyclerView;
     protected LayoutFeedDetailBottomInteractionBinding mBottomInteractionBinding;
+
+    protected Feed mFeed;
     protected FeedCommentAdapter mCommentAdapter;
 
     private CommentDialog mCommentDialog;
@@ -115,4 +116,10 @@ public abstract class ViewHandler {
             mCommentDialog.onActivityResult(requestCode, resultCode, data);
         }
     }
+
+    public void onResume() {}
+
+    public void onPause() {}
+
+    public void onBackPressed() {}
 }

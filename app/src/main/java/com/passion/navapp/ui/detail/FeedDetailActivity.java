@@ -10,8 +10,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.passion.navapp.model.Feed;
 
 public class FeedDetailActivity extends AppCompatActivity {
-    private static final String KEY_FEED = "key_feed";
-    private static final String KEY_CATEGORY = "key_category";
+    public static final String KEY_FEED = "key_feed";
+    public static final String KEY_CATEGORY = "key_category";
 
     private ViewHandler mViewHandler;
 
@@ -45,6 +45,30 @@ public class FeedDetailActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (mViewHandler != null) {
             mViewHandler.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mViewHandler != null) {
+            mViewHandler.onResume();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (mViewHandler != null) {
+            mViewHandler.onPause();
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if (mViewHandler != null) {
+            mViewHandler.onBackPressed();
         }
     }
 }

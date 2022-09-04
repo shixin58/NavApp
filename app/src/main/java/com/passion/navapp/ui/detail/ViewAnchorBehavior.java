@@ -15,9 +15,7 @@ public class ViewAnchorBehavior extends CoordinatorLayout.Behavior<View> {
     private int mExtraUsed;
     private int mAnchorId;
 
-    public ViewAnchorBehavior() {
-
-    }
+    public ViewAnchorBehavior() {}
 
     // 供布局文件引用Behavior时使用
     public ViewAnchorBehavior(Context ctx, AttributeSet attrs) {
@@ -25,6 +23,11 @@ public class ViewAnchorBehavior extends CoordinatorLayout.Behavior<View> {
         mAnchorId = typedArray.getResourceId(R.styleable.view_anchor_behavior_anchorId, 0);
         typedArray.recycle();
         mExtraUsed = PixUtils.dp2Px(48);// 底部互动区域高度，防止RecyclerView最后一个item被底部互动区域盖住
+    }
+
+    public ViewAnchorBehavior(int anchorId) {
+        mAnchorId = anchorId;
+        mExtraUsed = PixUtils.dp2Px(48);
     }
 
     @Override
@@ -59,6 +62,11 @@ public class ViewAnchorBehavior extends CoordinatorLayout.Behavior<View> {
         if (anchorView == null) {
             return false;
         }
-        return super.onLayoutChild(parent, child, layoutDirection);
+        CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) child.getLayoutParams();
+        int topMargin = layoutParams.topMargin;
+        int bottom = anchorView.getBottom();
+        parent.onLayoutChild(child, layoutDirection);
+        child.offsetTopAndBottom(topMargin + bottom);
+        return true;
     }
 }

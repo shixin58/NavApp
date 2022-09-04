@@ -67,6 +67,31 @@ public class FullscreenPlayerView extends ListPlayerView {
     }
 
     @Override
+    public void setLayoutParams(ViewGroup.LayoutParams params) {
+        if (mHeightPx > mWidthPx) {
+            int layoutWidth = params.width;
+            int layoutHeight = params.height;
+            // 重新设置cover宽高
+            ViewGroup.LayoutParams coverLayoutParams = mCoverView.getLayoutParams();
+            coverLayoutParams.width = (int) (mWidthPx/(mHeightPx*1.0f/layoutHeight));
+            coverLayoutParams.height = layoutHeight;
+            mCoverView.setLayoutParams(coverLayoutParams);
+
+            // setScale()实现PlayerView等比缩放
+            if (mExoPlayerView != null) {
+                ViewGroup.LayoutParams exoParams = mExoPlayerView.getLayoutParams();
+                if (exoParams != null) {
+                    float scaleX = coverLayoutParams.width * 1.0f / exoParams.width;
+                    float scaleY = coverLayoutParams.height * 1.0f /exoParams.height;
+                    mExoPlayerView.setScaleX(scaleX);
+                    mExoPlayerView.setScaleY(scaleY);
+                }
+            }
+        }
+        super.setLayoutParams(params);
+    }
+
+    @Override
     public void onActive() {
         PageListPlay pageListPlay = PageListPlayManager.get(mCategory);
         PlayerView playerView = mExoPlayerView;

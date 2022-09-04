@@ -46,6 +46,9 @@ public class ListPlayerView extends FrameLayout implements IPlayTarget,
 
     private boolean isPlaying;
 
+    protected int mWidthPx;
+    protected int mHeightPx;
+
     public ListPlayerView(@NonNull Context context) {
         this(context, null);
     }
@@ -83,6 +86,8 @@ public class ListPlayerView extends FrameLayout implements IPlayTarget,
     public void bindData(String category, int widthPx, int heightPx, String coverUrl, String videoUrl) {
         mCategory = category;
         mVideoUrl = videoUrl;
+        mWidthPx = widthPx;
+        mHeightPx = heightPx;
 
         PPImageView.setImageUrl(mCoverView, coverUrl, false);
 
@@ -256,5 +261,10 @@ public class ListPlayerView extends FrameLayout implements IPlayTarget,
         if (!playWhenReady) {
             isPlaying = false;
         }
+    }
+
+    public PlayerControlView getControlView() {
+        PageListPlay pageListPlay = PageListPlayManager.get(mCategory);
+        return pageListPlay.mControlView;
     }
 }

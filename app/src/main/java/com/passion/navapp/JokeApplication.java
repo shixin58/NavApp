@@ -8,6 +8,6 @@ public class JokeApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        ApiService.init("http://192.168.1.8:8080/serverdemo", null);
+        ApiService.init("http://192.168.1.3:8080/serverdemo", null);
     }
 }

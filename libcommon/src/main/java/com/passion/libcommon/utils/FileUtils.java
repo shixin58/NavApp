@@ -55,8 +55,9 @@ public class FileUtils {
     }
 
     /**
-     *
-     * @param frame
+     * 用Bitmap#compress()压缩图片，用ByteArrayOutputStream接收压缩后的图片流。
+     * 最后将字节数组保存到本地文件，文件路径通知调用方。
+     * @param frame 待压缩的Bitmap图片
      * @param limit kilobyte
      */
     private static byte[] compressBitmap(Bitmap frame, int limit) {

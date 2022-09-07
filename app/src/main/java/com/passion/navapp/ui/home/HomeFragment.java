@@ -74,6 +74,17 @@ public class HomeFragment extends AbsListFragment<Feed,HomeViewModel> {
                 boolean isVideo = feed.itemType == Feed.TYPE_VIDEO;
                 mShouldPause = !isVideo;
             }
+
+            @Override
+            public void onCurrentListChanged(@Nullable PagedList<Feed> previousList, @Nullable PagedList<Feed> currentList) {
+                // 每提交PagedList到PagedListAdapter，即PagedListAdapter#submitList(PagedList)，触发一次PagedListAdapter#onCurrentListChanged()
+                if (previousList!=null && currentList!=null) {
+                    if (!currentList.containsAll(previousList)) {
+                        // fix下拉刷新顶部插入一条新数据mAdapter.notifyItemInserted(0)，未显示出来
+                        mRecyclerView.scrollToPosition(0);
+                    }
+                }
+            }
         };
     }
 

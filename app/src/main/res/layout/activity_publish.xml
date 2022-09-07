@@ -10,20 +10,146 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/color_white"
+        android:fitsSystemWindows="true"
         tools:context=".ui.publish.PublishActivity">
 
-        <TextView
-            android:id="@+id/text_publish"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:textAlignment="center"
-            android:textSize="20sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+        <RelativeLayout
+            android:id="@+id/top_bar"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/dp_48"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/action_close"
+                android:layout_width="@dimen/dp_45"
+                android:layout_height="@dimen/dp_45"
+                android:layout_marginStart="16dp"
+                android:layout_centerVertical="true"
+                android:src="@drawable/icon_close"
+                android:padding="@dimen/dp_6" />
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                android:textColor="@color/color_000"
+                android:textSize="@dimen/sp_16"
+                android:text="@string/publish_title"
+                android:gravity="center"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/action_publish"
+                android:layout_width="70dp"
+                android:layout_height="30dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="@dimen/dp_16"
+                app:backgroundTint="@color/color_theme"
+                app:cornerRadius="15dp"
+                android:gravity="center"
+                android:text="@string/publish_button"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2px"
+                android:background="@color/color_gray2"
+                android:layout_centerHorizontal="true"
+                android:layout_alignParentBottom="true" />
+        </RelativeLayout>
+
+        <EditText
+            android:id="@+id/input_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/top_bar"
+            android:minHeight="100dp"
+            android:textColor="@color/color_000"
+            android:textColorHint="@color/color_999"
+            android:hint="@string/publish_edit_hint"
+            android:padding="@dimen/dp_16"
+            android:maxLines="1000"
+            android:textSize="@dimen/sp_14"
+            android:gravity="start|top"/>
+
+        <View
+            android:id="@+id/input_line"
+            android:layout_width="0dp"
+            android:layout_height="2px"
+            android:background="@color/color_gray2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/input_view"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/action_add_tag"
+            android:layout_width="wrap_content"
+            android:layout_height="25dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/input_line"
+            android:layout_marginStart="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_16"
+            android:gravity="center"
+            android:paddingStart="@dimen/dp_10"
+            android:textColor="@color/color_theme"
+            android:textSize="@dimen/sp_14"
+            android:text="@string/publish_add_tag"
+            android:textStyle="bold"
+            app:backgroundTint="@color/color_white"
+            app:cornerRadius="12dp"
+            app:strokeColor="@color/color_theme"
+            app:strokeWidth="1dp"
+            app:icon="@drawable/ic_add_club"
+            app:iconGravity="textEnd"
+            app:iconPadding="@dimen/dp_2"
+            app:iconTint="@color/color_theme"/>
+
+        <ImageView
+            android:id="@+id/action_add_file"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/action_add_tag"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/ic_add_file"/>
+
+        <FrameLayout
+            android:id="@+id/file_container"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/action_add_tag"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:visibility="gone">
+
+            <com.passion.navapp.view.PPImageView
+                android:id="@+id/cover"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <ImageView
+                android:id="@+id/video_icon"
+                android:layout_width="@dimen/dp_30"
+                android:layout_height="@dimen/dp_30"
+                android:layout_gravity="center"
+                android:src="@drawable/icon_video_play"
+                android:visibility="gone"/>
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/action_delete_file"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end|top"
+                android:paddingStart="6dp"
+                app:srcCompat="@drawable/icon_close"
+                app:tint="@color/color_white"/>
+        </FrameLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

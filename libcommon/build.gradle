@@ -77,5 +77,8 @@ dependencies {
     api "com.github.chrisbanes:PhotoView:2.3.0@aar"
 
     // 文件上传用aliyun oss
-    api "com.aliyun.dpa:oss-android-sdk:+"
+    api "com.aliyun.dpa:oss-android-sdk:2.9.12"
+
+    // WorkManager，android.arch.work被androidx.work取代
+    api 'androidx.work:work-runtime:2.6.0'
 }

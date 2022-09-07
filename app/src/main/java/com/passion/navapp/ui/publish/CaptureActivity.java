@@ -3,7 +3,6 @@ package com.passion.navapp.ui.publish;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -20,6 +19,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.arch.core.executor.ArchTaskExecutor;
 import androidx.camera.core.CameraX;
@@ -54,7 +54,8 @@ public class CaptureActivity extends AppCompatActivity {
 
     private final CameraX.LensFacing mLensFacing = CameraX.LensFacing.BACK;
     private final int mRotation = Surface.ROTATION_0;
-    private final Size mResolution = new Size(1280, 720);// 拍照、录视频基于横屏
+    // 从拍照源头限制分辨率，以免上传过慢。拍照、录视频基于横屏。
+    private final Size mResolution = new Size(1280, 720);
     private final Rational mRational = new Rational(9, 16);
 
     // Preview/ImageCapture/VideoCapture均是UseCase子类，均通过Builder模式构建
@@ -83,6 +84,7 @@ public class CaptureActivity extends AppCompatActivity {
                 // Android 10+，有权限也不能写入Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
                 File file = new File(getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS),
                         System.currentTimeMillis()+".jpeg");
+                // takePicture传递文件路径，及文件保存状态回调
                 // OnImageSavedListener回调在子线程，刷新UI需切换线程
                 mImageCapture.takePicture(file, new ImageCapture.OnImageSavedListener() {
 
@@ -104,6 +106,7 @@ public class CaptureActivity extends AppCompatActivity {
                 takingPicture = false;
                 File file = new File(getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS),
                         System.currentTimeMillis()+".mp4");
+                // onLongClick启动录视频，ACTION_UP结束录视频
                 mVideoCapture.startRecording(file, new VideoCapture.OnVideoSavedListener() {
                     @Override
                     public void onVideoSaved(File file) {
@@ -130,6 +133,7 @@ public class CaptureActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PreviewActivity.REQ_PREVIEW && resultCode == Activity.RESULT_OK) {
+            // 预览ok
             Intent intent = new Intent();
             intent.putExtra(RESULT_FILE_PATH, outputFilePath);
             // 当设备处于竖屏，宽高切换
@@ -155,12 +159,12 @@ public class CaptureActivity extends AppCompatActivity {
     private void onFileSaved(File file) {
         outputFilePath = file.getAbsolutePath();
         String mimeType = takingPicture?"image/jpeg":"video/mp4";
-        // onImageSaved()或onVideoSaved()调用后通知相册扫描，使文件出现在相册
+        // 通知相册扫描，使文件出现在相册，在onImageSaved()或onVideoSaved()之后。
         MediaScannerConnection.scanFile(this, new String[]{outputFilePath}, new String[]{mimeType}, new MediaScannerConnection.OnScanCompletedListener() {
             @Override
             public void onScanCompleted(String path, Uri uri) {}
         });
-        // 跳转到全屏预览
+        // 跳转到全屏预览，传递图片或视频本地文件路径
         PreviewActivity.openActivityForResult(CaptureActivity.this, outputFilePath, !takingPicture, getString(R.string.preview_ok));
     }
 
@@ -209,10 +213,10 @@ public class CaptureActivity extends AppCompatActivity {
         mPreview = new Preview(previewConfig);
 
         mImageCapture = new ImageCapture(new ImageCaptureConfig.Builder()
-                .setLensFacing(mLensFacing)
-                .setTargetRotation(mRotation)
-                .setTargetResolution(mResolution)
-                .setTargetAspectRatio(mRational)
+                .setLensFacing(mLensFacing)// 摄像头位置
+                .setTargetRotation(mRotation)// 旋转角度
+                .setTargetResolution(mResolution)// 分辨率
+                .setTargetAspectRatio(mRational)// 宽高比
                 .build());
 
         mVideoCapture = new VideoCapture(new VideoCaptureConfig.Builder()
@@ -220,8 +224,8 @@ public class CaptureActivity extends AppCompatActivity {
                 .setTargetRotation(mRotation)
                 .setTargetResolution(mResolution)
                 .setTargetAspectRatio(mRational)
-                .setVideoFrameRate(25)
-                .setBitRate(3 * 1024 * 1024)
+                .setVideoFrameRate(25)// frame per second
+                .setBitRate(3 * 1024 * 1024)// bit rate
                 .build());
 
         mPreview.setOnPreviewOutputUpdateListener(new Preview.OnPreviewOutputUpdateListener() {

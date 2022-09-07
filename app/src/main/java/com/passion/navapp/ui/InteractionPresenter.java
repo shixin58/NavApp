@@ -1,11 +1,11 @@
 package com.passion.navapp.ui;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.arch.core.executor.ArchTaskExecutor;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;

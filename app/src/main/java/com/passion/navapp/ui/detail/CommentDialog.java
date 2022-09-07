@@ -147,7 +147,8 @@ public class CommentDialog extends DialogFragment implements View.OnClickListene
     private void publishComment() {
         if (TextUtils.isEmpty(mBinding.inputView.getText())){ return; }
 
-        // 先上传视频和封面图再调用发布评论接口
+        // 先上传视频和封面图，再调用发布评论接口
+        // 用MediaMetadataRetriever由视频文件异步生成视频封面图
         if (mIsVideo && !TextUtils.isEmpty(mFilePath)) {
             FileUtils.generateVideoCover(mFilePath).observe(this, new Observer<String>() {
                 @Override
@@ -156,6 +157,7 @@ public class CommentDialog extends DialogFragment implements View.OnClickListene
                 }
             });
         } else if (!TextUtils.isEmpty(mFilePath)) {
+            // 图文格式的评论，图片未压缩会比较大，上传较慢
             uploadFile(mFilePath, null);
         } else {// 纯文本
             publish();
@@ -171,8 +173,8 @@ public class CommentDialog extends DialogFragment implements View.OnClickListene
     private void uploadFile(String filePath, String coverPath) {
         // 文件上传较慢，显示转菊花
         showLoadingDialog();
-        // 多文件上传，保证多线程同步
-        // 此处使用了AtomicInteger保证俩文件上传同步，CountDownLatch和CyclicBarrier也可以
+        // 多个文件上传任务并发，保证多线程同步。
+        // 此处使用了AtomicInteger保证俩文件上传同步。WorkManager、CountDownLatch和CyclicBarrier也可以。
         AtomicInteger count = new AtomicInteger(1);
         if (!TextUtils.isEmpty(coverPath)) {
             count.set(2);
@@ -180,8 +182,8 @@ public class CommentDialog extends DialogFragment implements View.OnClickListene
                 @Override
                 public void run() {
                     mCoverUrl = FileUploadManager.upload(coverPath);
-                    int remaining = count.decrementAndGet();
-                    if (remaining <= 0) {// 0表示上传都结束了
+                    int remaining = count.decrementAndGet();// 0表示上传都结束了
+                    if (remaining <= 0) {// 每个任务结束时，判断下是否所有任务都结束了。若所有任务都结束，调用发布评论接口。
                         if (!TextUtils.isEmpty(mFileUrl) && !TextUtils.isEmpty(mCoverUrl)) {
                             publish();
                         } else {

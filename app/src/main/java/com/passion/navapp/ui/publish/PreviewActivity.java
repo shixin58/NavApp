@@ -78,6 +78,7 @@ public class PreviewActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void previewImage(String previewUrl) {
+        // 用PhotoView预览图片，PhotoView是AppCompatImageView子类
         mBinding.photoView.setVisibility(View.VISIBLE);
         Glide.with(this)
                 .load(previewUrl)
@@ -86,7 +87,7 @@ public class PreviewActivity extends AppCompatActivity implements View.OnClickLi
 
     private void previewVideo(String previewUrl) {
         mBinding.playerView.setVisibility(View.VISIBLE);
-        // 用ExoPlayer播放本地视频
+        // 用ExoPlayer播放本地视频，实现预览
         mExoPlayer = new SimpleExoPlayer.Builder(this,
                 new DefaultRenderersFactory(this),
                 new DefaultTrackSelector(this),
@@ -96,6 +97,7 @@ public class PreviewActivity extends AppCompatActivity implements View.OnClickLi
                 new AnalyticsCollector(Clock.DEFAULT))
                 .build();
 
+        // 将本地或网络url转化为Uri，供MediaSource使用
         Uri uri = null;
         File file = new File(previewUrl);
         if (file.exists()) {// 本地文件，如发布预览
@@ -111,8 +113,10 @@ public class PreviewActivity extends AppCompatActivity implements View.OnClickLi
             uri = Uri.parse(previewUrl);
         }
 
-        // DefaultDataSource会将网络请求委托给DefaultHttpDataSource
+        // 创建MediaSource
+        String userAgent = Util.getUserAgent(this, getPackageName());
         ProgressiveMediaSource.Factory mediaSourceFactory = new ProgressiveMediaSource.Factory(
+                // DefaultDataSource会将网络请求委托给DefaultHttpDataSource
                 new DefaultDataSourceFactory(this, new TransferListener() {
                     @Override
                     public void onTransferInitializing(DataSource source, DataSpec dataSpec, boolean isNetwork) {}
@@ -125,13 +129,16 @@ public class PreviewActivity extends AppCompatActivity implements View.OnClickLi
 
                     @Override
                     public void onTransferEnd(DataSource source, DataSpec dataSpec, boolean isNetwork) {}
-                }, new DefaultHttpDataSource.Factory().setUserAgent(
-                        Util.getUserAgent(this, getPackageName()))));
-        ProgressiveMediaSource mediaSource = mediaSourceFactory.createMediaSource(new MediaItem.Builder().setUri(uri).build());
+                }, new DefaultHttpDataSource.Factory().setUserAgent(userAgent)));
+        MediaItem mediaItem = new MediaItem.Builder()
+                .setUri(uri)
+                .build();
+        ProgressiveMediaSource mediaSource = mediaSourceFactory.createMediaSource(mediaItem);
+
         mExoPlayer.setMediaSource(mediaSource);
         mExoPlayer.prepare();
         mExoPlayer.setPlayWhenReady(true);
-        mBinding.playerView.setPlayer(mExoPlayer);
+        mBinding.playerView.setPlayer(mExoPlayer);// 将PlayerView绑定到SimpleExoPlayer
     }
 
     @Override

@@ -20,12 +20,17 @@ import com.passion.libcommon.AppGlobals;
 
 /**
  * 阿里云oss 文件上传
+ * 线程池采用newFixedThreadPool, oss v2.9.12网络请求使用OkHttp v3.11.0
  */
 public class FileUploadManager {
-    private static OSSClient oss = null;
+    private static final OSSClient oss;
+
     private static final String ALIYUN_BUCKET_URL = "https://pipijoke.oss-cn-hangzhou.aliyuncs.com/";
     private static final String BUCKET_NAME = "pipijoke";
+
+    // 就近选择服务器所在区域，调用链路耗时更低
     private static final String END_POINT = "http://oss-cn-hangzhou.aliyuncs.com";
+
     // 防止反编译拿到appId、appSecret修改服务器文件，采用鉴权服务器透传
     private static final String AUTH_SERVER_URL = "http://123.56.232.18:7080/";
 
@@ -37,12 +42,20 @@ public class FileUploadManager {
         conf.setSocketTimeout(15 * 1000); // socket超时，默认15秒
         conf.setMaxConcurrentRequest(5); // 最大并发请求数，默认5个
         conf.setMaxErrorRetry(2); // 失败后最大重试次数，默认2次
+
         OSSLog.disableLog(); //这个开启会支持写入手机sd卡中的一份日志文件位置在SDCard_path\OSSLog\logs.csv
 
+        // OSSClient代理OSSImpl，具体任务执行在InternalRequestOperation
         oss = new OSSClient(AppGlobals.getApplication(), END_POINT, credentialProvider, conf);
     }
 
-    // 同步
+    /**
+     * 同步阻塞
+     * @param bytes
+     * @return 文件url
+     * @throws ClientException
+     * @throws ServiceException
+     */
     public static String upload(byte[] bytes) throws ClientException, ServiceException {
         String objectKey = String.valueOf(System.currentTimeMillis());
         PutObjectRequest request = new PutObjectRequest(BUCKET_NAME, objectKey, bytes);
@@ -61,16 +74,18 @@ public class FileUploadManager {
         upload(request, callback);
     }
 
-    // 同步
+    /**
+     * 同步阻塞
+     * @param filePath 本地文件路径
+     * @return 文件url
+     */
     public static String upload(String filePath) {
         String objectKey = filePath.substring(filePath.lastIndexOf("/") + 1);
         PutObjectRequest request = new PutObjectRequest(BUCKET_NAME, objectKey, filePath);
         PutObjectResult result = null;
         try {
             result = oss.putObject(request);
-        } catch (ClientException e) {
-            e.printStackTrace();
-        } catch (ServiceException e) {
+        } catch (ClientException | ServiceException e) {
             e.printStackTrace();
         }
         if (result != null && result.getStatusCode() == 200) {

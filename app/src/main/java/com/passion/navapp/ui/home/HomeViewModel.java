@@ -110,7 +110,7 @@ public class HomeViewModel extends AbsViewModel<Feed> {
             callback.onResult(data);
             if (key > 0) {
                 // 通过LiveData告诉UI层，是否关闭上拉分页动画，需手动切换UI线程
-                getBoundaryPageData().postValue(!data.isEmpty());
+                ((MutableLiveData<Boolean>)getBoundaryPageData()).postValue(!data.isEmpty());
                 loadAfter.set(false);
             }
         } catch (CloneNotSupportedException e) {

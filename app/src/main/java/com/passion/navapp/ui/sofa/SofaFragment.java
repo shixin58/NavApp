@@ -33,11 +33,11 @@ import java.util.Map;
 public class SofaFragment extends Fragment {
     private FragmentSofaBinding mBinding;
 
-    private TabLayout tabLayout;
-    private ViewPager2 viewPager;
-    private TabLayoutMediator tabLayoutMediator;
+    private TabLayout mTabLayout;
+    private ViewPager2 mViewPager;
+    private TabLayoutMediator mTabLayoutMediator;
 
-    private SofaTabs sofaConfig;
+    private SofaTabs mSofaConfig;
     private List<SofaTabs.Tab> mTabs;
     private final Map<Integer,Fragment> mFragmentMap = new HashMap<>();
 
@@ -52,18 +52,18 @@ public class SofaFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        tabLayout = mBinding.tabLayout;
-        viewPager = mBinding.viewPager;
+        mTabLayout = mBinding.tabLayout;
+        mViewPager = mBinding.viewPager;
 
-        sofaConfig = getSofaTabs();
+        mSofaConfig = getSofaTabs();
         mTabs = new ArrayList<>();
-        for (SofaTabs.Tab tab : sofaConfig.tabs) {
+        for (SofaTabs.Tab tab : mSofaConfig.tabs) {
             if (tab.enable) {
                 mTabs.add(tab);
             }
         }
-        viewPager.setOffscreenPageLimit(ViewPager2.OFFSCREEN_PAGE_LIMIT_DEFAULT);
-        viewPager.setAdapter(new FragmentStateAdapter(getChildFragmentManager(), getLifecycle()) {
+        mViewPager.setOffscreenPageLimit(ViewPager2.OFFSCREEN_PAGE_LIMIT_DEFAULT);
+        mViewPager.setAdapter(new FragmentStateAdapter(getChildFragmentManager(), getLifecycle()) {
             @NonNull
             @Override
             public Fragment createFragment(int position) {
@@ -82,22 +82,22 @@ public class SofaFragment extends Fragment {
         });
 
         // 通过TabLayoutMediator让TabLayout和ViewPager2联动
-        tabLayoutMediator = new TabLayoutMediator(tabLayout, viewPager, false, new TabLayoutMediator.TabConfigurationStrategy() {
+        mTabLayoutMediator = new TabLayoutMediator(mTabLayout, mViewPager, false, new TabLayoutMediator.TabConfigurationStrategy() {
             @Override
             public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
                 tab.setCustomView(makeTabView(position));
             }
         });
-        tabLayoutMediator.attach();
+        mTabLayoutMediator.attach();
 
         // 监听ViewPager2页面选中
-        viewPager.registerOnPageChangeCallback(mOnPageChangeCallback);
+        mViewPager.registerOnPageChangeCallback(mOnPageChangeCallback);
 
         // TabLayout和ViewPager2都初始化完成后，设置默认选中项
-        viewPager.post(new Runnable() {
+        mViewPager.post(new Runnable() {
             @Override
             public void run() {
-                viewPager.setCurrentItem(sofaConfig.select);
+                mViewPager.setCurrentItem(mSofaConfig.select);
             }
         });
     }
@@ -105,15 +105,15 @@ public class SofaFragment extends Fragment {
     ViewPager2.OnPageChangeCallback mOnPageChangeCallback = new ViewPager2.OnPageChangeCallback() {
         @Override
         public void onPageSelected(int position) {
-            int tabCount = tabLayout.getTabCount();
+            int tabCount = mTabLayout.getTabCount();
             for (int i=0;i<tabCount;i++) {
-                TabLayout.Tab tab = tabLayout.getTabAt(i);
+                TabLayout.Tab tab = mTabLayout.getTabAt(i);
                 TextView customView = (TextView) tab.getCustomView();
                 if (tab.getPosition() == position) {
-                    customView.setTextSize(sofaConfig.activeSize);
+                    customView.setTextSize(mSofaConfig.activeSize);
                     customView.setTypeface(Typeface.DEFAULT_BOLD);
                 } else {
-                    customView.setTextSize(sofaConfig.normalSize);
+                    customView.setTextSize(mSofaConfig.normalSize);
                     customView.setTypeface(Typeface.DEFAULT);
                 }
             }
@@ -127,27 +127,27 @@ public class SofaFragment extends Fragment {
         states[0] = new int[]{android.R.attr.state_selected};
         states[1] = new int[]{};
 
-        int[] colors = new int[]{Color.parseColor(sofaConfig.activeColor),Color.parseColor(sofaConfig.normalColor)};
+        int[] colors = new int[]{Color.parseColor(mSofaConfig.activeColor),Color.parseColor(mSofaConfig.normalColor)};
         ColorStateList colorStateList = new ColorStateList(states, colors);
         tabView.setTextColor(colorStateList);
         tabView.setText(mTabs.get(pos).title);
-        tabView.setTextSize(sofaConfig.normalSize);
+        tabView.setTextSize(mSofaConfig.normalSize);
 
         return tabView;
     }
 
-    private Fragment getTabFragment(int pos) {
+    protected Fragment getTabFragment(int pos) {
         return HomeFragment.getInstance(mTabs.get(pos).tag);
     }
 
-    private SofaTabs getSofaTabs() {
+    protected SofaTabs getSofaTabs() {
         return AppConfig.getSofaTabs();
     }
 
     @Override
     public void onDestroy() {
-        tabLayoutMediator.detach();
-        viewPager.unregisterOnPageChangeCallback(mOnPageChangeCallback);
+        mTabLayoutMediator.detach();
+        mViewPager.unregisterOnPageChangeCallback(mOnPageChangeCallback);
         super.onDestroy();
     }
 }

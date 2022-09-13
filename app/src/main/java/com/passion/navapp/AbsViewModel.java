@@ -36,7 +36,7 @@ public abstract class AbsViewModel<T> extends ViewModel {
                 .build();
     }
 
-    public DataSource<Integer,T> getDataSource() {
+    public DataSource getDataSource() {
         return dataSource;
     }
 
@@ -44,7 +44,7 @@ public abstract class AbsViewModel<T> extends ViewModel {
         return pageData;
     }
 
-    public MutableLiveData<Boolean> getBoundaryPageData() {
+    public LiveData<Boolean> getBoundaryPageData() {
         return boundaryPageData;
     }
 
@@ -76,5 +76,5 @@ public abstract class AbsViewModel<T> extends ViewModel {
         }
     };
 
-    public abstract DataSource<Integer,T> createDataSource();
+    public abstract DataSource createDataSource();
 }

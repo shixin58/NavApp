@@ -31,7 +31,7 @@ import java.util.Map;
 
 /**
  * LiveData数据倒灌：
- * <p>1）旋转屏幕或切换系统语言导致Activity重建；
+ * <p>1）页面配置改变(旋转屏幕、切换系统语言、软键盘弹起)导致Activity重建；
  * <p>2）页面重建时，重新observe()，observer.mLastVersion重置为-1，但ViewModel保存之前数据，LiveData.mVersion恢复为重建前的值；
  * <p>3）Activity可见时，LiveData自动发送最后一条数据。<p>
  *

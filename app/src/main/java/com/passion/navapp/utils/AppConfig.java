@@ -21,6 +21,7 @@ public class AppConfig {
     private static HashMap<String, Destination> sDestConfig;
     private static BottomBar sBottomBar;
     private static SofaTabs sSofaTabs;
+    private static SofaTabs sFindTabs;
 
     public static HashMap<String, Destination> getDestConfig() {
         if (sDestConfig == null) {
@@ -45,6 +46,15 @@ public class AppConfig {
             Collections.sort(sSofaTabs.tabs, (o1, o2) -> o1.index - o2.index);
         }
         return sSofaTabs;
+    }
+
+    public static SofaTabs getFindTabs() {
+        if (sFindTabs == null) {
+            String content = parseFile("find_tabs_config.json");
+            sFindTabs = JSON.parseObject(content, SofaTabs.class);
+            Collections.sort(sFindTabs.tabs, (o1, o2) -> o1.index - o2.index);
+        }
+        return sFindTabs;
     }
 
     private static String parseFile(String fileName) {

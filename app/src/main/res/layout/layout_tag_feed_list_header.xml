@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="owner"
+            type="androidx.lifecycle.LifecycleOwner" />
+        <variable
+            name="feedTag"
+            type="com.passion.navapp.model.FeedTag" />
+        <import type="android.view.View"/>
+        <import type="android.text.TextUtils"/>
+        <import type="com.passion.navapp.utils.StringConverter"/>
+        <import type="com.passion.navapp.ui.InteractionPresenter"/>
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="300dp">
+
+        <com.passion.navapp.view.PPImageView
+            android:id="@+id/header_background"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:scaleType="centerCrop"
+            app:imageUrl="@{feedTag.background}"/>
+
+        <TextView
+            android:id="@+id/header_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/header_background"
+            android:layout_marginStart="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_16"
+            android:textColor="@color/color_000"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:text="@{feedTag.title}"
+            tools:text="神秘的皮皮虾"/>
+
+        <TextView
+            android:id="@+id/header_follow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/header_background"
+            android:layout_marginEnd="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_16"
+            android:onClick="@{()->InteractionPresenter.toggleTagLike(owner,feedTag)}"
+            android:textColor="@color/color_theme"
+            android:textSize="13sp"
+            android:text="@{feedTag.hasFollow?@string/tag_followed:@string/tag_follow,default=@string/tag_follow}"/>
+
+        <TextView
+            android:id="@+id/header_intro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/header_title"
+            android:layout_marginStart="@dimen/dp_16"
+            android:layout_marginTop="8dp"
+            android:textColor="@color/color_999"
+            android:textSize="13sp"
+            android:text="@{feedTag.intro}"/>
+
+        <TextView
+            android:id="@+id/header_tag_watcher"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/header_intro"
+            android:layout_marginStart="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_10"
+            android:visibility="@{feedTag.enterNum>0?View.VISIBLE:View.GONE}"
+            android:textColor="@color/color_999"
+            android:textSize="13sp"
+            android:text="@{StringConverter.convertTagFeedList(feedTag.enterNum)}"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_10"
+            android:layout_marginTop="@dimen/dp_10"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/header_tag_watcher"
+            android:background="@color/color_gray2"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

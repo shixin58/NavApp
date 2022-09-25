@@ -61,6 +61,7 @@
         <activity android:name=".ui.login.LoginActivity"/>
         <activity android:name=".ui.detail.FeedDetailActivity"
             android:theme="@style/feedDetail"/>
+        <activity android:name=".ui.find.TagFeedListActivity"/>
     </application>
 
 </manifest>

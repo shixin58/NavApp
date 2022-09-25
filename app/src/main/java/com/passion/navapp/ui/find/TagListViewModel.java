@@ -4,15 +4,18 @@ import android.annotation.SuppressLint;
 
 import androidx.annotation.NonNull;
 import androidx.arch.core.executor.ArchTaskExecutor;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.paging.ItemKeyedDataSource;
 
+import com.alibaba.fastjson.TypeReference;
 import com.passion.libnetwork.ApiResponse;
 import com.passion.libnetwork.ApiService;
 import com.passion.navapp.AbsViewModel;
 import com.passion.navapp.model.FeedTag;
 import com.passion.navapp.ui.login.UserManager;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -21,6 +24,7 @@ public class TagListViewModel extends AbsViewModel<FeedTag> {
     private String tagType;
     private int offset;
     private final AtomicBoolean loadAfter = new AtomicBoolean(false);
+    private final MutableLiveData switchTabLiveData = new MutableLiveData();
 
     @Override
     public DataSource createDataSource() {
@@ -31,11 +35,15 @@ public class TagListViewModel extends AbsViewModel<FeedTag> {
         this.tagType = tagType;
     }
 
+    public LiveData getSwitchTabLiveData() {
+        return switchTabLiveData;
+    }
+
     private class DataSource extends ItemKeyedDataSource<Long, FeedTag> {
 
         @Override
         public void loadInitial(@NonNull LoadInitialParams<Long> params, @NonNull LoadInitialCallback<FeedTag> callback) {
-            loadData(params.requestedInitialKey, callback);
+            loadData(0L, callback);
         }
 
         @Override
@@ -58,6 +66,7 @@ public class TagListViewModel extends AbsViewModel<FeedTag> {
                     .addParam("tagType", tagType)
                     .addParam("pageCount", 10)
                     .addParam("offset", offset)
+                    .responseType(new TypeReference<ArrayList<FeedTag>>(){}.getType())
                     .execute();
 
             List<FeedTag> result = response.body==null?Collections.emptyList():response.body;

@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 // 使用paging框架时，下拉刷新或分页得到的PagedList跟PagedListAdapter强关联。
 // 外部传入的Adapter拿不到数据集合对象，无法在onBindViewHolder完成数据绑定。
 // 传统RecyclerView设置header/footer的方式变得不可用，新方案继承PagedListAdapter完成相应功能。
-public abstract class AbsPagedListAdapter<T, VH extends RecyclerView.ViewHolder> extends PagedListAdapter<T,VH> {
+public abstract class AbsPagedListAdapter<T, VH extends RecyclerView.ViewHolder> extends PagedListAdapter<T,RecyclerView.ViewHolder> {
     private static final int BASE_ITEM_TYPE_HEADER = 100_000;
     private static final int BASE_ITEM_TYPE_FOOTER = 200_000;
 
@@ -82,7 +82,9 @@ public abstract class AbsPagedListAdapter<T, VH extends RecyclerView.ViewHolder>
         return getItemViewType2(position);
     }
 
-    protected abstract int getItemViewType2(int position);
+    protected int getItemViewType2(int position) {
+        return 0;
+    }
 
     private boolean isHeaderPosition(int position) {
         return position < mHeaders.size();
@@ -94,7 +96,7 @@ public abstract class AbsPagedListAdapter<T, VH extends RecyclerView.ViewHolder>
 
     @NonNull
     @Override
-    public VH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (mHeaders.indexOfKey(viewType) >= 0) {
             View view = mHeaders.get(viewType);
             return (VH) new RecyclerView.ViewHolder(view){};
@@ -109,11 +111,11 @@ public abstract class AbsPagedListAdapter<T, VH extends RecyclerView.ViewHolder>
     protected abstract VH onCreateViewHolder2(ViewGroup parent, int viewType);
 
     @Override
-    public void onBindViewHolder(@NonNull VH holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (isHeaderPosition(position) || isFooterPosition(position))
             return;
         position -= mHeaders.size();
-        onBindViewHolder2(holder, position);
+        onBindViewHolder2((VH) holder, position);
     }
 
     protected abstract void onBindViewHolder2(VH holder, int position);

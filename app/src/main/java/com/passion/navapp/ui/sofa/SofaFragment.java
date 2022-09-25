@@ -34,7 +34,7 @@ public class SofaFragment extends Fragment {
     private FragmentSofaBinding mBinding;
 
     private TabLayout mTabLayout;
-    private ViewPager2 mViewPager;
+    protected ViewPager2 mViewPager;
     private TabLayoutMediator mTabLayoutMediator;
 
     private SofaTabs mSofaConfig;

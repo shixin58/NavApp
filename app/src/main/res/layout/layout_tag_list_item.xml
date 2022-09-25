@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="feedTag"
+            type="com.passion.navapp.model.FeedTag" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="90dp">
+
+        <com.passion.navapp.view.PPImageView
+            android:id="@+id/tag_avatar"
+            android:layout_width="@dimen/dp_60"
+            android:layout_height="@dimen/dp_60"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginStart="@dimen/dp_10"
+            app:imageUrl="@{feedTag.icon}"
+            app:radius="@{8}"/>
+
+        <TextView
+            android:id="@+id/tag_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@id/tag_avatar"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_20"
+            android:textColor="@color/color_000"
+            android:textSize="@dimen/sp_16"
+            android:text="@{feedTag.title}"/>
+
+        <TextView
+            android:id="@+id/tag_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@id/tag_avatar"
+            app:layout_constraintTop_toBottomOf="@id/tag_title"
+            android:layout_marginStart="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_10"
+            android:textColor="@color/color_999"
+            android:textSize="13sp"
+            android:text="@{feedTag.feedNum+@string/tag_list_item_hot_feed}"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/action_follow"
+            android:layout_width="@dimen/dp_60"
+            android:layout_height="28dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginEnd="@dimen/dp_10"
+            android:textSize="13sp"
+            android:text="@{feedTag.hasFollow?@string/tag_followed:@string/tag_follow}"
+            android:gravity="center"
+            android:backgroundTint="@color/color_theme"
+            app:cornerRadius="8dp"
+            tools:text="@string/tag_follow"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

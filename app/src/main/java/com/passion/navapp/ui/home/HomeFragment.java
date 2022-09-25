@@ -8,6 +8,7 @@ import androidx.annotation.Nullable;
 import androidx.paging.ItemKeyedDataSource;
 import androidx.paging.PagedList;
 import androidx.paging.PagedListAdapter;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.passion.libnavannotation.FragmentDestination;
 import com.passion.navapp.exoplayer.PageListPlayDetector;
@@ -49,23 +50,29 @@ public class HomeFragment extends AbsListFragment<Feed,HomeViewModel> {
     }
 
     @Override
-    public PagedListAdapter getAdapter() {
+    public PagedListAdapter createAdapter() {
         Bundle bundle = getArguments();
         mFeedType = bundle==null?"all":bundle.getString("feedType");
         return new FeedAdapter(getContext(), mFeedType) {
             @Override
-            public void onViewAttachedToWindow(@NonNull ViewHolder holder) {
+            public void onViewAttachedToWindow(@NonNull RecyclerView.ViewHolder holder) {
                 super.onViewAttachedToWindow(holder);
-                if (holder.isVideoItem()) {
-                    mPlayDetector.addTarget(holder.getListPlayerView());
+                if (holder instanceof FeedAdapter.ViewHolder) {
+                    FeedAdapter.ViewHolder normalHolder = (ViewHolder) holder;
+                    if (normalHolder.isVideoItem()) {
+                        mPlayDetector.addTarget(normalHolder.getListPlayerView());
+                    }
                 }
             }
 
             @Override
-            public void onViewDetachedFromWindow(@NonNull ViewHolder holder) {
+            public void onViewDetachedFromWindow(@NonNull RecyclerView.ViewHolder holder) {
                 super.onViewDetachedFromWindow(holder);
-                if (holder.isVideoItem()) {
-                    mPlayDetector.removeTarget(holder.getListPlayerView());
+                if (holder instanceof FeedAdapter.ViewHolder) {
+                    FeedAdapter.ViewHolder normalHolder = (ViewHolder) holder;
+                    if (normalHolder.isVideoItem()) {
+                        mPlayDetector.removeTarget(normalHolder.getListPlayerView());
+                    }
                 }
             }
 

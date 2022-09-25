@@ -58,15 +58,22 @@ public abstract class AbsListFragment<T,M extends AbsViewModel<T>> extends Fragm
         mRefreshLayout.setOnRefreshListener(this);
         mRefreshLayout.setOnLoadMoreListener(this);
 
-        mAdapter = getAdapter();
+        mAdapter = createAdapter();
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        mRecyclerView.setItemAnimator(null);
+
+        // 默认给列表中的item一个10dp的ItemDecoration
         DividerItemDecoration decoration = new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL);
         decoration.setDrawable(ContextCompat.getDrawable(getContext(), R.drawable.list_divider));
         mRecyclerView.addItemDecoration(decoration);
-        mRecyclerView.setItemAnimator(null);
 
-        // 利用子类传递的泛型参数，拿到AbsViewModel对象
+        generateViewModel();
+        afterViewCreated();
+    }
+
+    private void generateViewModel() {
+        // 利用AbsViewModel子类传递的泛型参数，拿到子类class对象，进而拿到子类对象
         ParameterizedType type = (ParameterizedType) getClass().getGenericSuperclass();
         Type[] arguments = type.getActualTypeArguments();
         if (arguments.length > 1) {
@@ -80,7 +87,6 @@ public abstract class AbsListFragment<T,M extends AbsViewModel<T>> extends Fragm
             // 监听分页有无更多数据，来决定是否关闭上来加载动画
             mViewModel.getBoundaryPageData().observe(getViewLifecycleOwner(), this::finishRefresh);
         }
-        afterViewCreated();
     }
 
     public void submitList(PagedList<T> pagedList) {
@@ -107,5 +113,5 @@ public abstract class AbsListFragment<T,M extends AbsViewModel<T>> extends Fragm
         }
     }
 
-    public abstract PagedListAdapter<T, RecyclerView.ViewHolder> getAdapter();
+    public abstract PagedListAdapter<T, RecyclerView.ViewHolder> createAdapter();
 }

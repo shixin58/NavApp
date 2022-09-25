@@ -27,6 +27,7 @@ import com.passion.navapp.ui.publish.PreviewActivity;
 
 public class FeedCommentAdapter extends AbsPagedListAdapter<Comment,FeedCommentAdapter.ViewHolder> {
     private final Context mContext;
+    private final LayoutInflater mLayoutInflater;
 
     protected FeedCommentAdapter(Context ctx) {
         super(new DiffUtil.ItemCallback<Comment>() {
@@ -41,6 +42,7 @@ public class FeedCommentAdapter extends AbsPagedListAdapter<Comment,FeedCommentA
             }
         });
         mContext = ctx;
+        mLayoutInflater = LayoutInflater.from(mContext);
     }
 
     @Override
@@ -51,7 +53,7 @@ public class FeedCommentAdapter extends AbsPagedListAdapter<Comment,FeedCommentA
     @Override
     protected ViewHolder onCreateViewHolder2(ViewGroup parent, int viewType) {
         LayoutFeedCommentListItemBinding binding = LayoutFeedCommentListItemBinding.inflate(
-                LayoutInflater.from(parent.getContext()), parent, false);
+                mLayoutInflater, parent, false);
         return new ViewHolder(binding.getRoot(), binding);
     }
 

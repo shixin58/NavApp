@@ -20,6 +20,7 @@ import com.passion.libnetwork.ApiService;
 import com.passion.libnetwork.JsonCallback;
 import com.passion.navapp.model.Comment;
 import com.passion.navapp.model.Feed;
+import com.passion.navapp.model.FeedTag;
 import com.passion.navapp.model.User;
 import com.passion.navapp.ui.login.UserManager;
 
@@ -201,7 +202,7 @@ public class InteractionPresenter {
     public static void toggleFollowUser(LifecycleOwner lifecycleOwner, Feed feed) {
         if (!UserManager.get().isLogin()) {
             LiveData<User> liveData = UserManager.get().login(AppGlobals.getApplication());
-            liveData.observe(lifecycleOwner, new Observer<User>() {
+            liveData.observe(lifecycleOwner, new Observer<>() {
                 @Override
                 public void onChanged(User user) {
                     if (user != null) {
@@ -228,6 +229,43 @@ public class InteractionPresenter {
                             LiveDataBus.get()
                                     .with(DATA_FROM_INTERACTION)
                                     .postValue(feed);
+                        }
+                    }
+
+                    @Override
+                    public void onError(ApiResponse<JSONObject> response) {
+                        showToast(response.message);
+                    }
+                });
+    }
+
+    public static void toggleTagLike(LifecycleOwner lifecycleOwner, FeedTag feedTag) {
+        if (!UserManager.get().isLogin()) {
+            LiveData<User> liveData = UserManager.get().login(AppGlobals.getApplication());
+            liveData.observe(lifecycleOwner, new Observer<>() {
+                @Override
+                public void onChanged(User user) {
+                    if (user != null) {
+                        toggleTagLikeInternal(feedTag);
+                    }
+                    liveData.removeObserver(this);
+                }
+            });
+            return;
+        }
+        toggleTagLikeInternal(feedTag);
+    }
+
+    private static void toggleTagLikeInternal(FeedTag feedTag) {
+        ApiService.get("tag/toggleTagFollow")
+                .addParam("userId", UserManager.get().getUserId())
+                .addParam("tagId", feedTag.tagId)
+                .execute(new JsonCallback<JSONObject>() {
+                    @Override
+                    public void onSuccess(ApiResponse<JSONObject> response) {
+                        if (response.body != null) {
+                            boolean hasFollow = response.body.getBooleanValue("hasFollow");
+                            feedTag.setHasFollow(hasFollow);
                         }
                     }
 

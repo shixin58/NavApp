@@ -29,7 +29,8 @@ public class PageListPlayDetector {
                 if (event == Lifecycle.Event.ON_DESTROY) {
                     mPlayingTarget = null;
                     mTarget.clear();
-                    recyclerView.getAdapter().unregisterAdapterDataObserver(mDataObserver);
+                    // IllegalStateException: Observer PageListPlayDetector was not registered
+//                    recyclerView.getAdapter().unregisterAdapterDataObserver(mDataObserver);
                     lifecycleOwner.getLifecycle().removeObserver(this);
                 }
             }

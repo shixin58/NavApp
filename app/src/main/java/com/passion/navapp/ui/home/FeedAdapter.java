@@ -7,14 +7,16 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
+import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.Observer;
-import androidx.paging.PagedListAdapter;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.passion.libcommon.extension.AbsPagedListAdapter;
 import com.passion.libcommon.extension.LiveDataBus;
+import com.passion.navapp.R;
 import com.passion.navapp.databinding.LayoutFeedTypeImageBinding;
 import com.passion.navapp.databinding.LayoutFeedTypeVideoBinding;
 import com.passion.navapp.model.Feed;
@@ -22,7 +24,7 @@ import com.passion.navapp.ui.InteractionPresenter;
 import com.passion.navapp.ui.detail.FeedDetailActivity;
 import com.passion.navapp.view.ListPlayerView;
 
-public class FeedAdapter extends PagedListAdapter<Feed, FeedAdapter.ViewHolder> {
+public class FeedAdapter extends AbsPagedListAdapter<Feed, FeedAdapter.ViewHolder> {
     private final LayoutInflater mInflater;
     private final String mCategory;
     private final Context mContext;
@@ -49,25 +51,24 @@ public class FeedAdapter extends PagedListAdapter<Feed, FeedAdapter.ViewHolder> 
     }
 
     @Override
-    public int getItemViewType(int position) {
+    protected int getItemViewType2(int position) {
         Feed feed = getItem(position);
-        return feed.itemType;
+        if (feed.itemType == Feed.TYPE_IMAGE_TEXT) {
+            return R.layout.layout_feed_type_image;
+        } else if (feed.itemType == Feed.TYPE_VIDEO) {
+            return R.layout.layout_feed_type_video;
+        }
+        return 0;
     }
 
-    @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        ViewDataBinding binding;
-        if (viewType==Feed.TYPE_IMAGE_TEXT) {
-            binding = LayoutFeedTypeImageBinding.inflate(mInflater, parent, false);
-        } else {
-            binding = LayoutFeedTypeVideoBinding.inflate(mInflater, parent, false);
-        }
+    protected ViewHolder onCreateViewHolder2(ViewGroup parent, int viewType) {
+        ViewDataBinding binding = DataBindingUtil.inflate(mInflater, viewType, parent, false);
         return new ViewHolder(binding.getRoot(), binding);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    protected void onBindViewHolder2(ViewHolder holder, int position) {
         final Feed feed = getItem(position);
         holder.bindData(feed);
         holder.itemView.setOnClickListener(new View.OnClickListener() {

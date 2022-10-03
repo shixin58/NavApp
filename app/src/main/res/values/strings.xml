@@ -42,4 +42,15 @@
     <string name="tag_follow">关注</string>
     <string name="tag_list_no_follow">还没关注任何标签，去推荐页面看看吧~</string>
     <string name="tag_list_no_follow_button">看看推荐</string>
+    <string name="like_count">\n获赞</string>
+    <string name="fans_count">\n粉丝</string>
+    <string name="follow_count">\n关注</string>
+    <string name="score_count">\n积分</string>
+    <string name="fragment_my_feed">帖子</string>
+    <string name="fragment_my_comment">评论</string>
+    <string name="fragment_my_favorite">收藏</string>
+    <string name="fragment_my_history">观看历史</string>
+    <string name="fragment_my_logout">确定要继续退出么？</string>
+    <string name="fragment_my_logout_ok">确定</string>
+    <string name="fragment_my_logout_cancel">取消</string>
 </resources>

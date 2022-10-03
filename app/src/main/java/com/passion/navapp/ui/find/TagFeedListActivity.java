@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.passion.libcommon.EmptyView;
 import com.passion.libcommon.PixUtils;
 import com.passion.libcommon.extension.AbsPagedListAdapter;
+import com.passion.libcommon.utils.StatusBar;
 import com.passion.navapp.R;
 import com.passion.navapp.databinding.ActivityTagFeedListBinding;
 import com.passion.navapp.databinding.LayoutTagFeedListHeaderBinding;
@@ -62,6 +63,7 @@ public class TagFeedListActivity extends AppCompatActivity implements View.OnCli
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        StatusBar.fitSystemBar(this);
         super.onCreate(savedInstanceState);
         mBinding = ActivityTagFeedListBinding.inflate(getLayoutInflater());
         setContentView(mBinding.getRoot());

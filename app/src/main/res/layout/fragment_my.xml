@@ -4,7 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+        <variable
+            name="user"
+            type="com.passion.navapp.model.User" />
+        <import type="com.passion.navapp.utils.StringConverter" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -12,18 +15,205 @@
         android:layout_height="match_parent"
         tools:context=".ui.my.MyFragment">
 
-        <TextView
-            android:id="@+id/text_my"
+        <com.passion.navapp.view.PPImageView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:textAlignment="center"
-            android:textSize="20sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_height="200dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:blur_url="@{user.avatar}"
+            app:radius="@{50}"
+            android:scaleType="fitXY"
+            tools:background="#ff0000"/>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/action_logout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginEnd="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_16"
+            android:fitsSystemWindows="true"
+            android:src="@drawable/icon_logout"/>
+
+        <com.passion.navapp.view.PPImageView
+            android:id="@+id/avatar"
+            android:layout_width="@dimen/dp_45"
+            android:layout_height="@dimen/dp_45"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="@dimen/dp_16"
+            android:layout_marginTop="75dp"
+            app:imageUrl="@{user.avatar}"
+            app:isCircle="@{true}"
+            tools:src="@mipmap/ic_launcher_round"/>
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@id/avatar"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="@dimen/dp_10"
+            android:layout_marginTop="75dp"
+            android:textColor="@color/color_000"
+            android:textSize="@dimen/sp_16"
+            android:text="@{user.name}"
+            tools:text="神秘的皮皮虾"/>
+
+        <TextView
+            android:id="@+id/description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@id/avatar"
+            app:layout_constraintTop_toBottomOf="@id/name"
+            android:layout_marginStart="@dimen/dp_10"
+            android:layout_marginTop="@dimen/dp_6"
+            android:textColor="@color/color_999"
+            android:textSize="@dimen/sp_12"
+            android:text="@{user.description}"
+            tools:text="神秘的皮皮虾"/>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/go_detail"
+            android:layout_width="@dimen/dp_30"
+            android:layout_height="@dimen/dp_30"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="80dp"
+            android:layout_marginEnd="10dp"
+            app:srcCompat="@drawable/ic_right_arrow"
+            app:tint="@color/color_white"/>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_overlap"
+            android:layout_width="match_parent"
+            android:layout_height="90dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="@dimen/dp_16"
+            android:layout_marginEnd="@dimen/dp_16"
+            android:layout_marginTop="160dp"
+            app:cardCornerRadius="10dp"
+            app:cardPreventCornerOverlap="true"
+            app:cardUseCompatPadding="true"
+            android:background="@color/color_white">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/like_count"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textColor="@color/color_666"
+                    android:lineSpacingMultiplier="1.3"
+                    android:text="@{StringConverter.convertSpannable(user.likeCount,@string/like_count)}"/>
+
+                <TextView
+                    android:id="@+id/fans_count"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textColor="@color/color_666"
+                    android:lineSpacingMultiplier="1.3"
+                    android:text="@{StringConverter.convertSpannable(user.followerCount,@string/fans_count)}"/>
+
+                <TextView
+                    android:id="@+id/follow_count"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textColor="@color/color_666"
+                    android:lineSpacingMultiplier="1.3"
+                    android:text="@{StringConverter.convertSpannable(user.followCount,@string/follow_count)}"/>
+
+                <TextView
+                    android:id="@+id/score_count"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:textColor="@color/color_666"
+                    android:lineSpacingMultiplier="1.3"
+                    android:text="@{StringConverter.convertSpannable(user.score,@string/score_count)}"/>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="90dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/card_overlap"
+            android:layout_marginStart="@dimen/dp_16"
+            android:layout_marginEnd="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_20"
+            app:cardCornerRadius="@dimen/dp_10"
+            android:background="@color/color_white">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/user_feed"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center"
+                    android:drawablePadding="@dimen/dp_5"
+                    android:drawableTop="@drawable/ic_profile_my_post"
+                    android:textColor="@color/color_333"
+                    android:textSize="@dimen/sp_12"
+                    android:text="@string/fragment_my_feed"/>
+
+                <TextView
+                    android:id="@+id/user_comment"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center"
+                    android:drawablePadding="@dimen/dp_5"
+                    android:drawableTop="@drawable/ic_profile_my_comment"
+                    android:textColor="@color/color_333"
+                    android:textSize="@dimen/sp_12"
+                    android:text="@string/fragment_my_comment"/>
+
+                <TextView
+                    android:id="@+id/user_favorite"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center"
+                    android:drawablePadding="@dimen/dp_5"
+                    android:drawableTop="@drawable/ic_profile_my_collection"
+                    android:textColor="@color/color_333"
+                    android:textSize="@dimen/sp_12"
+                    android:text="@string/fragment_my_favorite"/>
+
+                <TextView
+                    android:id="@+id/user_history"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center"
+                    android:drawablePadding="@dimen/dp_5"
+                    android:drawableTop="@drawable/ic_profile_my_read_history"
+                    android:textColor="@color/color_333"
+                    android:textSize="@dimen/sp_12"
+                    android:text="@string/fragment_my_history"/>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

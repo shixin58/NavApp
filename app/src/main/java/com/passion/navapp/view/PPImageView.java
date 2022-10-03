@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,6 +18,7 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.passion.libcommon.PixUtils;
 
+import jp.wasabeef.glide.transformations.BlurTransformation;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 public class PPImageView extends AppCompatImageView {
@@ -109,5 +111,18 @@ public class PPImageView extends AppCompatImageView {
             ((ViewGroup.MarginLayoutParams)params).leftMargin = width>=height?0: PixUtils.dp2Px(marginLeft);
         }
         setLayoutParams(params);
+    }
+
+    @BindingAdapter(value = {"blur_url", "radius"})
+    public static void setBlurImageUrl(ImageView imageView, String blurUrl, int radius) {
+        Glide.with(imageView).load(blurUrl).override(radius)
+                .transform(new BlurTransformation())
+                .dontAnimate()
+                .into(new SimpleTarget<Drawable>() {
+                    @Override
+                    public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                        imageView.setBackground(resource);
+                    }
+                });
     }
 }

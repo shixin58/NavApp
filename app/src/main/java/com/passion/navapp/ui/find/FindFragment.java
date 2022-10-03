@@ -15,6 +15,10 @@ import com.passion.navapp.model.SofaTabs;
 import com.passion.navapp.ui.sofa.SofaFragment;
 import com.passion.navapp.utils.AppConfig;
 
+/**
+ * 发现tab页，包含关注和推荐两个二级tab页。
+ * <p>两个标签列表页均由TagListFragment实现，点击标签item跳转至标签帖子列表页TagFeedListActivity。
+ */
 @FragmentDestination(pageUrl = "main/tabs/find")
 public class FindFragment extends SofaFragment {
     @Override
@@ -31,7 +35,8 @@ public class FindFragment extends SofaFragment {
             public void onAttachFragment(@NonNull FragmentManager fragmentManager, @NonNull Fragment fragment) {
                 String tagType = fragment.getArguments().getString(TagListFragment.KEY_TAG_TYPE);
                 if (TextUtils.equals(tagType, "onlyFollow")) {
-                    // ViewModel数据共享实现tab切换
+                    // 在发现tab实现从二级tab页关注切换到二级tab页推荐。
+                    // ViewModel数据共享拿到二级页面的ViewModel，进而观察对应LiveData。ViewPager2#setCurrentItem()实现tab切换。
                     ViewModelProviders.of(fragment).get(TagListViewModel.class)
                             .getSwitchTabLiveData().observe(FindFragment.this, new Observer() {
                                 @Override

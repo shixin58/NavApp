@@ -1,12 +1,19 @@
 package com.passion.navapp.ui.login;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.widget.Toast;
 
+import androidx.arch.core.executor.ArchTaskExecutor;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.passion.libcommon.AppGlobals;
+import com.passion.libnetwork.ApiResponse;
+import com.passion.libnetwork.ApiService;
+import com.passion.libnetwork.JsonCallback;
 import com.passion.libnetwork.cache.CacheManager;
 import com.passion.navapp.model.User;
 
@@ -68,5 +75,41 @@ public class UserManager {
 
     public long getUserId() {
         return isLogin()? mUser.userId : 0;
+    }
+
+    public LiveData<User> refresh() {
+        if (!isLogin()) {
+            return login(AppGlobals.getApplication());
+        }
+
+        MutableLiveData<User> liveData = new MutableLiveData<>();
+        ApiService.get("/user/query")
+                .addParam("userId", getUserId())
+                .execute(new JsonCallback<User>() {
+                    @Override
+                    public void onSuccess(ApiResponse<User> response) {
+                        saveUser(response.body);
+                        liveData.postValue(getUser());
+                    }
+
+                    @SuppressLint("RestrictedApi")
+                    @Override
+                    public void onError(ApiResponse<User> response) {
+                        ArchTaskExecutor.getMainThreadExecutor().execute(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(AppGlobals.getApplication(), response.message, Toast.LENGTH_SHORT)
+                                        .show();
+                            }
+                        });
+                        liveData.postValue(null);
+                    }
+                });
+        return liveData;
+    }
+
+    public void logout() {
+        CacheManager.deleteCache(KEY_CACHE_USER, mUser);
+        mUser = null;
     }
 }

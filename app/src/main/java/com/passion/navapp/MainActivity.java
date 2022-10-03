@@ -21,7 +21,7 @@ import com.passion.navapp.ui.login.UserManager;
 import com.passion.navapp.utils.AppConfig;
 import com.passion.navapp.utils.NavGraphBuilder;
 import com.passion.navapp.utils.PermissionUtils;
-import com.passion.navapp.utils.StatusBar;
+import com.passion.libcommon.utils.StatusBar;
 import com.passion.navapp.view.AppBottomBar;
 import com.tencent.tauth.Tencent;
 
@@ -44,8 +44,8 @@ import java.util.Map;
  */
 public class MainActivity extends AppCompatActivity implements NavigationBarView.OnItemSelectedListener {
     private ActivityMainBinding mBinding;
-    private NavController navController;
-    private AppBottomBar navView;
+    private NavController mNavController;
+    private AppBottomBar mNavView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,14 +56,14 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
         super.onCreate(savedInstanceState);
         mBinding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(mBinding.getRoot());
-        navView = mBinding.navView;
+        mNavView = mBinding.navView;
 
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_main);
-        navController = NavHostFragment.findNavController(fragment);
+        mNavController = NavHostFragment.findNavController(fragment);
 
-        navView.setOnItemSelectedListener(this);
+        mNavView.setOnItemSelectedListener(this);
 
-        NavGraphBuilder.build(this, fragment.getChildFragmentManager(), navController, fragment.getId());
+        NavGraphBuilder.build(this, fragment.getChildFragmentManager(), mNavController, fragment.getId());
 
         if(ContextCompat.checkSelfPermission(this, READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
             Tencent.setIsPermissionGranted(true);
@@ -81,12 +81,12 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
             if (value!=null && item.getItemId()==value.id && value.needLogin
                     && !UserManager.get().isLogin()) {
                 UserManager.get().login(this).observe(this, user -> {
-                    navView.setSelectedItemId(item.getItemId());
+                    mNavView.setSelectedItemId(item.getItemId());
                 });
                 return false;
             }
         }
-        navController.navigate(item.getItemId());
+        mNavController.navigate(item.getItemId());
         return !TextUtils.isEmpty(item.getTitle());
     }
 
@@ -100,5 +100,40 @@ public class MainActivity extends AppCompatActivity implements NavigationBarView
                 }
             }
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        /*boolean shouldIntercept = false;
+        int homeDestinationId = 0;
+
+        Fragment fragment = getSupportFragmentManager().getPrimaryNavigationFragment();
+        String tag = fragment.getTag();
+        int currentPageDestId = Integer.parseInt(tag);
+        HashMap<String, Destination> destConfig = AppConfig.getDestConfig();
+        Iterator<Map.Entry<String, Destination>> iterator = destConfig.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<String, Destination> entry = iterator.next();
+            Destination destination = entry.getValue();
+            if (destination.id==currentPageDestId && !destination.asStarter) {
+                shouldIntercept = true;
+            }
+            if (destination.asStarter) {
+                homeDestinationId = destination.id;
+            }
+        }
+
+        if (shouldIntercept && homeDestinationId > 0) {
+            mNavView.setSelectedItemId(homeDestinationId);
+            return;
+        }
+        super.onBackPressed();*/
+        int currentPageId = mNavController.getCurrentDestination().getId();
+        int homeDestId = mNavController.getGraph().getStartDestination();
+        if (currentPageId != homeDestId) {
+            mNavView.setSelectedItemId(homeDestId);
+            return;
+        }
+        finish();
     }
 }

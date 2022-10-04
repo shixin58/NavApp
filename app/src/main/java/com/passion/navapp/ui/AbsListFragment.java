@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.passion.libcommon.EmptyView;
+import com.passion.libcommon.view.EmptyView;
 import com.passion.navapp.AbsViewModel;
 import com.passion.navapp.R;
 import com.passion.navapp.databinding.LayoutRefreshViewBinding;

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="owner"
+            type="androidx.lifecycle.LifecycleOwner" />
+        <variable
+            name="feed"
+            type="Feed" />
+        <import type="com.passion.navapp.model.Feed"/>
+        <import type="android.view.View"/>
+    </data>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="10dp">
+
+        <include layout="@layout/layout_feed_author"
+            app:user="@{feed.author}"/>
+
+        <include layout="@layout/layout_feed_text"
+            app:feedText="@{feed.feeds_text}"/>
+
+        <com.passion.libcommon.view.CornerLinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_40"
+            android:orientation="horizontal"
+            android:paddingStart="@dimen/dp_16"
+            android:layout_marginStart="@dimen/dp_16"
+            android:layout_marginEnd="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_10"
+            android:background="@color/color_gray2"
+            app:radius="6dp"
+            app:radiusSide="all">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:textColor="@color/color_000"
+                android:textSize="@dimen/sp_14"
+                android:textStyle="bold"
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:text="@{feed.feeds_text}"/>
+
+            <FrameLayout
+                android:layout_width="@dimen/dp_40"
+                android:layout_height="@dimen/dp_40">
+
+                <com.passion.navapp.view.PPImageView
+                    android:id="@+id/icon_cover"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    app:radius="6dp"
+                    app:radiusSide="right"
+                    app:imageUrl="@{feed.cover}"/>
+
+                <ImageView
+                    android:id="@+id/icon_video"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/icon_video_play"
+                    android:layout_gravity="center"
+                    android:visibility="@{feed.itemType==Feed.TYPE_VIDEO?View.VISIBLE:View.GONE}"/>
+            </FrameLayout>
+        </com.passion.libcommon.view.CornerLinearLayout>
+
+        <include layout="@layout/layout_feed_tag"
+            app:tagText="@{feed.activityText}"/>
+
+        <include layout="@layout/layout_feed_interaction"
+            app:owner="@{owner}"
+            app:feed="@{feed}"/>
+    </LinearLayout>
+</layout>

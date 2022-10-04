@@ -66,6 +66,10 @@ public class MyFragment extends Fragment {
                         .show();
             }
         });
+
+        mBinding.goDetail.setOnClickListener(v -> ProfileActivity.openActivity(getContext(), ProfileActivity.TabType.TAB_TYPE_ALL));
+        mBinding.userFeed.setOnClickListener(v -> ProfileActivity.openActivity(getContext(), ProfileActivity.TabType.TAB_TYPE_FEED));
+        mBinding.userComment.setOnClickListener(v -> ProfileActivity.openActivity(getContext(), ProfileActivity.TabType.TAB_TYPE_COMMENT));
     }
 
     @Override

@@ -8,7 +8,6 @@ import androidx.annotation.Nullable;
 import androidx.paging.ItemKeyedDataSource;
 import androidx.paging.PagedList;
 import androidx.paging.PagedListAdapter;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.passion.libnavannotation.FragmentDestination;
 import com.passion.navapp.exoplayer.PageListPlayDetector;
@@ -54,25 +53,18 @@ public class HomeFragment extends AbsListFragment<Feed,HomeViewModel> {
         Bundle bundle = getArguments();
         mFeedType = bundle==null?"all":bundle.getString("feedType");
         return new FeedAdapter(getContext(), mFeedType) {
+
             @Override
-            public void onViewAttachedToWindow(@NonNull RecyclerView.ViewHolder holder) {
-                super.onViewAttachedToWindow(holder);
-                if (holder instanceof FeedAdapter.ViewHolder) {
-                    FeedAdapter.ViewHolder normalHolder = (ViewHolder) holder;
-                    if (normalHolder.isVideoItem()) {
-                        mPlayDetector.addTarget(normalHolder.getListPlayerView());
-                    }
+            public void onViewAttachedToWindow2(ViewHolder holder) {
+                if (holder.isVideoItem()) {
+                    mPlayDetector.addTarget(holder.getListPlayerView());
                 }
             }
 
             @Override
-            public void onViewDetachedFromWindow(@NonNull RecyclerView.ViewHolder holder) {
-                super.onViewDetachedFromWindow(holder);
-                if (holder instanceof FeedAdapter.ViewHolder) {
-                    FeedAdapter.ViewHolder normalHolder = (ViewHolder) holder;
-                    if (normalHolder.isVideoItem()) {
-                        mPlayDetector.removeTarget(normalHolder.getListPlayerView());
-                    }
+            public void onViewDetachedFromWindow2(ViewHolder holder) {
+                if (holder.isVideoItem()) {
+                    mPlayDetector.removeTarget(holder.getListPlayerView());
                 }
             }
 

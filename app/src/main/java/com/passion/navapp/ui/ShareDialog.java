@@ -24,7 +24,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.passion.libcommon.PixUtils;
-import com.passion.libcommon.RoundFrameLayout;
+import com.passion.libcommon.view.RoundFrameLayout;
 import com.passion.libcommon.ViewHelper;
 import com.passion.navapp.R;
 import com.passion.navapp.view.PPImageView;

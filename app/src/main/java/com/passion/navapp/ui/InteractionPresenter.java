@@ -276,6 +276,47 @@ public class InteractionPresenter {
                 });
     }
 
+    public static LiveData<Boolean> deleteFeed(Context ctx, long itemId) {
+        MutableLiveData<Boolean> liveData = new MutableLiveData<>();
+        new AlertDialog.Builder(ctx)
+                .setNegativeButton("删除", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        deleteFeedInternal(liveData, itemId);
+                    }
+                })
+                .setPositiveButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .setMessage("确定要删除这条帖子么？")
+                .create()
+                .show();
+        return liveData;
+    }
+
+    private static void deleteFeedInternal(MutableLiveData<Boolean> liveData, long itemId) {
+        ApiService.get("/feeds/deleteFeed")
+                .addParam("itemId", itemId)
+                .execute(new JsonCallback<JSONObject>() {
+                    @Override
+                    public void onSuccess(ApiResponse<JSONObject> response) {
+                        if (response.body != null) {
+                            boolean success = response.body.getBoolean("result");
+                            liveData.postValue(success);
+                        }
+                    }
+
+                    @Override
+                    public void onError(ApiResponse<JSONObject> response) {
+                        showToast(response.message);
+                    }
+                });
+    }
+
     public static LiveData<Boolean> deleteFeedComment(Context context, long itemId, long commentId) {
         MutableLiveData<Boolean> liveData = new MutableLiveData<>();
         new AlertDialog.Builder(context)
@@ -283,7 +324,7 @@ public class InteractionPresenter {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
-                        deleteFeedComment(liveData, itemId, commentId);
+                        deleteFeedCommentInternal(liveData, itemId, commentId);
                     }
                 })
                 .setPositiveButton("取消", new DialogInterface.OnClickListener() {
@@ -298,7 +339,7 @@ public class InteractionPresenter {
         return liveData;
     }
 
-    private static void deleteFeedComment(MutableLiveData<Boolean> liveData, long itemId, long commentId) {
+    private static void deleteFeedCommentInternal(MutableLiveData<Boolean> liveData, long itemId, long commentId) {
         ApiService.get("/comment/deleteComment")
                 .addParam("commentId", commentId)
                 .addParam("itemId", itemId)

@@ -53,4 +53,9 @@
     <string name="fragment_my_logout">确定要继续退出么？</string>
     <string name="fragment_my_logout_ok">确定</string>
     <string name="fragment_my_logout_cancel">取消</string>
+    <string-array name="profile_tabs">
+        <item>动态</item>
+        <item>帖子</item>
+        <item>评论</item>
+    </string-array>
 </resources>

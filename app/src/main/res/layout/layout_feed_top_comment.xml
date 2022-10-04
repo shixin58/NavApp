@@ -16,7 +16,7 @@
         <import type="com.passion.navapp.ui.InteractionPresenter" />
     </data>
 
-    <com.passion.libcommon.RoundFrameLayout
+    <com.passion.libcommon.view.RoundFrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/dp_16"
@@ -124,5 +124,5 @@
                     android:src="@drawable/icon_video_play" />
             </FrameLayout>
         </LinearLayout>
-    </com.passion.libcommon.RoundFrameLayout>
+    </com.passion.libcommon.view.RoundFrameLayout>
 </layout>

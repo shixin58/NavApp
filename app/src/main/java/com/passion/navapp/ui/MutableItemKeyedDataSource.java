@@ -11,12 +11,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-// 跟FeedDetailViewModel.CommentDataSource一致，继承ItemKeyedDataSource，为了代理其loadAfter()
+// 跟FeedDetailViewModel.CommentDataSource一致，继承ItemKeyedDataSource。
+// 为了代理mItemKeyedDataSource#loadAfter()，来变更原始数据源。
 public abstract class MutableItemKeyedDataSource<Key,Value> extends ItemKeyedDataSource<Key,Value> {
     private final ItemKeyedDataSource mItemKeyedDataSource;
 
     public List<Value> data = new ArrayList<>();
 
+    // build()同步触发loadInitial()
     public PagedList<Value> buildNewPagedList(PagedList.Config config) {
         @SuppressLint("RestrictedApi")
         PagedList<Value> pagedList = new PagedList.Builder<Key,Value>(this, config)

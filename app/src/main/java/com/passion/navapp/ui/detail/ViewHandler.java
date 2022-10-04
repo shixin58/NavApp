@@ -14,7 +14,7 @@ import androidx.paging.PagedList;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.passion.libcommon.EmptyView;
+import com.passion.libcommon.view.EmptyView;
 import com.passion.navapp.R;
 import com.passion.navapp.databinding.LayoutFeedDetailBottomInteractionBinding;
 import com.passion.navapp.model.Comment;

@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.passion.libcommon.extension.AbsPagedListAdapter;
 import com.passion.libcommon.extension.LiveDataBus;
+import com.passion.navapp.BR;
 import com.passion.navapp.R;
 import com.passion.navapp.databinding.LayoutFeedTypeImageBinding;
 import com.passion.navapp.databinding.LayoutFeedTypeVideoBinding;
@@ -26,8 +27,8 @@ import com.passion.navapp.view.ListPlayerView;
 
 public class FeedAdapter extends AbsPagedListAdapter<Feed, FeedAdapter.ViewHolder> {
     private final LayoutInflater mInflater;
-    private final String mCategory;
-    private final Context mContext;
+    protected final String mCategory;
+    protected final Context mContext;
 
     private FeedObserver mFeedObserver;
 
@@ -112,7 +113,7 @@ public class FeedAdapter extends AbsPagedListAdapter<Feed, FeedAdapter.ViewHolde
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private final ViewDataBinding mBinding;
-        public ListPlayerView listPlayerView;
+        private ListPlayerView listPlayerView;
         public ImageView feedImage;
 
         public ViewHolder(@NonNull View itemView, ViewDataBinding binding) {
@@ -121,16 +122,15 @@ public class FeedAdapter extends AbsPagedListAdapter<Feed, FeedAdapter.ViewHolde
         }
 
         public void bindData(Feed item) {
+            mBinding.setVariable(BR.feed, item);
             if (mBinding instanceof LayoutFeedTypeImageBinding) {
                 LayoutFeedTypeImageBinding imageBinding = (LayoutFeedTypeImageBinding) mBinding;
                 imageBinding.setOwner((LifecycleOwner) mContext);
-                imageBinding.setFeed(item);
                 imageBinding.feedImage.bindData(item.width, item.height, 16, item.cover);
                 feedImage = imageBinding.feedImage;
             } else {
                 LayoutFeedTypeVideoBinding videoBinding = (LayoutFeedTypeVideoBinding) mBinding;
                 videoBinding.setOwner((LifecycleOwner) mContext);
-                videoBinding.setFeed(item);
                 videoBinding.listPlayerView.bindData(mCategory, item.width, item.height, item.cover, item.url);
                 listPlayerView = videoBinding.listPlayerView;
             }

@@ -17,7 +17,7 @@ import androidx.paging.PagedListAdapter;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.passion.libcommon.EmptyView;
+import com.passion.libcommon.view.EmptyView;
 import com.passion.libcommon.PixUtils;
 import com.passion.libcommon.extension.AbsPagedListAdapter;
 import com.passion.libcommon.utils.StatusBar;
@@ -132,13 +132,16 @@ public class TagFeedListActivity extends AppCompatActivity implements View.OnCli
             }
 
             @Override
-            public void onViewDetachedFromWindow(@NonNull RecyclerView.ViewHolder holder) {
-                super.onViewDetachedFromWindow(holder);
-                if (holder instanceof FeedAdapter.ViewHolder) {
-                    FeedAdapter.ViewHolder normalHolder = (ViewHolder) holder;
-                    if (normalHolder.isVideoItem()) {
-                        mPlayDetector.removeTarget(normalHolder.getListPlayerView());
-                    }
+            public void onViewAttachedToWindow2(ViewHolder holder) {
+                if (holder.isVideoItem()) {
+                    mPlayDetector.addTarget(holder.getListPlayerView());
+                }
+            }
+
+            @Override
+            public void onViewDetachedFromWindow2(ViewHolder holder) {
+                if (holder.isVideoItem()) {
+                    mPlayDetector.removeTarget(holder.getListPlayerView());
                 }
             }
 

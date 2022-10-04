@@ -10,8 +10,7 @@
         <import type="com.passion.navapp.model.User"/>
     </data>
 
-    <LinearLayout
-        android:orientation="horizontal"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_40"
         android:layout_marginBottom="@dimen/dp_10"
@@ -22,13 +21,21 @@
             android:id="@+id/avatar"
             android:layout_width="@dimen/dp_40"
             android:layout_height="@dimen/dp_40"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:imageUrl="@{user.avatar}"
             app:isCircle="@{true}"
             tools:src="@mipmap/ic_launcher_round" />
 
         <TextView
+            android:id="@+id/author_name"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@id/avatar"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/create_time"
+            app:layout_constraintVertical_chainStyle="packed"
             android:layout_marginStart="@dimen/dp_10"
             android:gravity="center"
             android:text="@{user.name}"
@@ -36,5 +43,29 @@
             android:textColor="@color/color_333"
             android:textStyle="bold"
             tools:text="user_name" />
-    </LinearLayout>
+
+        <TextView
+            android:id="@+id/create_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@id/avatar"
+            app:layout_constraintTop_toBottomOf="@id/author_name"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginStart="@dimen/dp_10"
+            android:textColor="@color/color_999"
+            android:textSize="@dimen/sp_12"
+            android:visibility="gone"
+            tools:text="1小时前" />
+
+        <ImageView
+            android:id="@+id/delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:src="@drawable/icon_item_cell_delete"
+            android:padding="@dimen/dp_10"
+            android:visibility="gone"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

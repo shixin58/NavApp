@@ -60,7 +60,7 @@
                     android:scaleType="centerCrop"
                     app:radius="6dp"
                     app:radiusSide="right"
-                    app:imageUrl="@{feed.cover}"/>
+                    app:image_url="@{feed.cover}"/>
 
                 <ImageView
                     android:id="@+id/icon_video"

@@ -44,7 +44,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:layout_marginStart="@dimen/dp_10"
-                app:imageUrl="@{feedTag.icon}"
+                app:image_url="@{feedTag.icon}"
                 app:radius="@{8}"/>
 
             <TextView

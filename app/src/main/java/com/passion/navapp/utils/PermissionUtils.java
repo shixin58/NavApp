@@ -38,7 +38,7 @@ public class PermissionUtils {
         if(ContextCompat.checkSelfPermission(ctx, READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             if(ActivityCompat.shouldShowRequestPermissionRationale(activity, READ_EXTERNAL_STORAGE)) {
                 Toast.makeText(activity, "您需要到系统设置里打开存储权限", Toast.LENGTH_SHORT).show();
-            }else {
+            } else {
                 ActivityCompat.requestPermissions(activity, new String[]{READ_EXTERNAL_STORAGE,
                         WRITE_EXTERNAL_STORAGE}, requestCode);
             }
@@ -52,7 +52,7 @@ public class PermissionUtils {
         if(ContextCompat.checkSelfPermission(ctx, READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
             if(ActivityCompat.shouldShowRequestPermissionRationale(activity, READ_PHONE_STATE)) {
                 Toast.makeText(activity, "您需要到系统设置里打开读取手机信息权限", Toast.LENGTH_SHORT).show();
-            }else {
+            } else {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     ActivityCompat.requestPermissions(activity, new String[]{READ_PHONE_STATE, READ_PHONE_NUMBERS,
                             CALL_PHONE, ANSWER_PHONE_CALLS, ADD_VOICEMAIL, USE_SIP}, requestCode);
@@ -71,7 +71,7 @@ public class PermissionUtils {
         if(ContextCompat.checkSelfPermission(ctx, CAMERA) != PackageManager.PERMISSION_GRANTED) {
             if(ActivityCompat.shouldShowRequestPermissionRationale(activity, CAMERA)) {
                 Toast.makeText(activity, "您需要到系统设置里打开Camera权限", Toast.LENGTH_SHORT).show();
-            }else {
+            } else {
                 ActivityCompat.requestPermissions(activity, new String[]{CAMERA,
                         WRITE_EXTERNAL_STORAGE}, requestCode);
             }
@@ -85,7 +85,7 @@ public class PermissionUtils {
         if(ContextCompat.checkSelfPermission(ctx, RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
             if(ActivityCompat.shouldShowRequestPermissionRationale(activity, RECORD_AUDIO)) {
                 Toast.makeText(activity, "您需要到系统设置里打开录音权限", Toast.LENGTH_SHORT).show();
-            }else {
+            } else {
                 ActivityCompat.requestPermissions(activity, new String[]{RECORD_AUDIO,
                         WRITE_EXTERNAL_STORAGE}, requestCode);
             }

@@ -30,7 +30,7 @@
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginStart="@dimen/dp_16"
             android:layout_marginTop="@dimen/dp_16"
-            app:imageUrl="@{comment.author.avatar}"
+            app:image_url="@{comment.author.avatar}"
             app:isCircle="@{true}"
             tools:src="@mipmap/ic_launcher_round"/>
 

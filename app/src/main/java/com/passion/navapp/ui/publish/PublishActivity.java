@@ -291,7 +291,8 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode==CaptureActivity.REQ_CAPTURE && resultCode==Activity.RESULT_OK && data!=null) {
+        if (requestCode == CaptureActivity.REQ_CAPTURE
+                && resultCode == Activity.RESULT_OK && data != null) {
             mFilePath = data.getStringExtra(CaptureActivity.RESULT_FILE_PATH);
             mWidth = data.getIntExtra(CaptureActivity.RESULT_FILE_WIDTH, 720);
             mHeight = data.getIntExtra(CaptureActivity.RESULT_FILE_HEIGHT, 1280);

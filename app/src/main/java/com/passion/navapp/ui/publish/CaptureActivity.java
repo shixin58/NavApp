@@ -39,7 +39,7 @@ import java.io.File;
 import java.util.LinkedList;
 
 public class CaptureActivity extends AppCompatActivity {
-    private static final String[] PERMISSIONS = new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+    private static final String[] PERMISSIONS = new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO};
     private static final int REQUEST_CODE_PERMISSIONS = 1000;
 
     public static final int REQ_CAPTURE = 1001;
@@ -54,7 +54,8 @@ public class CaptureActivity extends AppCompatActivity {
 
     private final CameraX.LensFacing mLensFacing = CameraX.LensFacing.BACK;
     private final int mRotation = Surface.ROTATION_0;
-    // 从拍照源头限制分辨率，以免上传过慢。拍照、录视频基于横屏。
+    // 从拍照源头限制分辨率，以免上传过慢。
+    // 基于竖屏拍照、录视频。切横屏后，width和height值需要互换。
     private final Size mResolution = new Size(1280, 720);
     private final Rational mRational = new Rational(9, 16);
 
@@ -63,8 +64,10 @@ public class CaptureActivity extends AppCompatActivity {
     private ImageCapture mImageCapture;
     private VideoCapture mVideoCapture;
 
-    private boolean takingPicture;
-    private String outputFilePath;
+    // 区分拍照还是录视频
+    private boolean mTakingPicture;
+
+    private String mOutputFilePath;
 
     public static void openActivityForResult(Activity activity) {
         Intent intent = new Intent(activity, CaptureActivity.class);
@@ -77,10 +80,11 @@ public class CaptureActivity extends AppCompatActivity {
         mBinding = ActivityCaptureBinding.inflate(getLayoutInflater());
         setContentView(mBinding.getRoot());
         ActivityCompat.requestPermissions(this, PERMISSIONS, REQUEST_CODE_PERMISSIONS);
+
         mBinding.recordView.setOnRecordListener(new RecordView.OnRecordListener() {
             @Override
             public void onClick() {
-                takingPicture = true;
+                mTakingPicture = true;
                 // Android 10+，有权限也不能写入Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
                 File file = new File(getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS),
                         System.currentTimeMillis()+".jpeg");
@@ -103,7 +107,7 @@ public class CaptureActivity extends AppCompatActivity {
             @SuppressLint("RestrictedApi")
             @Override
             public void onLongClick() {
-                takingPicture = false;
+                mTakingPicture = false;
                 File file = new File(getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS),
                         System.currentTimeMillis()+".mp4");
                 // onLongClick启动录视频，ACTION_UP结束录视频
@@ -132,14 +136,15 @@ public class CaptureActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PreviewActivity.REQ_PREVIEW && resultCode == Activity.RESULT_OK) {
-            // 预览ok
+        if (requestCode == PreviewActivity.REQ_PREVIEW && resultCode == Activity.RESULT_OK) {// 预览ok
             Intent intent = new Intent();
-            intent.putExtra(RESULT_FILE_PATH, outputFilePath);
-            // 当设备处于竖屏，宽高切换
+            intent.putExtra(RESULT_FILE_PATH, mOutputFilePath);
+
+            // 设备处于竖屏时，宽高需要互换。横屏不需要
             intent.putExtra(RESULT_FILE_WIDTH, mResolution.getHeight());
             intent.putExtra(RESULT_FILE_HEIGHT, mResolution.getWidth());
-            intent.putExtra(RESULT_FILE_IS_VIDEO, !takingPicture);
+
+            intent.putExtra(RESULT_FILE_IS_VIDEO, !mTakingPicture);
             setResult(Activity.RESULT_OK, intent);
             finish();
         }
@@ -157,15 +162,17 @@ public class CaptureActivity extends AppCompatActivity {
     }
 
     private void onFileSaved(File file) {
-        outputFilePath = file.getAbsolutePath();
-        String mimeType = takingPicture?"image/jpeg":"video/mp4";
-        // 通知相册扫描，使文件出现在相册，在onImageSaved()或onVideoSaved()之后。
-        MediaScannerConnection.scanFile(this, new String[]{outputFilePath}, new String[]{mimeType}, new MediaScannerConnection.OnScanCompletedListener() {
+        mOutputFilePath = file.getAbsolutePath();
+
+        String mimeType = mTakingPicture ?"image/jpeg":"video/mp4";
+        // 在onImageSaved()或onVideoSaved()之后，通知相册扫描，使文件出现在相册。
+        MediaScannerConnection.scanFile(this, new String[]{mOutputFilePath}, new String[]{mimeType}, new MediaScannerConnection.OnScanCompletedListener() {
             @Override
             public void onScanCompleted(String path, Uri uri) {}
         });
+
         // 跳转到全屏预览，传递图片或视频本地文件路径
-        PreviewActivity.openActivityForResult(CaptureActivity.this, outputFilePath, !takingPicture, getString(R.string.preview_ok));
+        PreviewActivity.openActivityForResult(CaptureActivity.this, mOutputFilePath, !mTakingPicture, getString(R.string.preview_ok));
     }
 
     @Override

@@ -51,7 +51,7 @@
                     android:id="@+id/avatar"
                     android:layout_width="@dimen/dp_20"
                     android:layout_height="@dimen/dp_20"
-                    app:imageUrl="@{comment.author.avatar}"
+                    app:image_url="@{comment.author.avatar}"
                     app:isCircle="@{true}"
                     tools:src="@mipmap/ic_launcher_round" />
 
@@ -112,7 +112,7 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:background="@color/color_theme_10"
-                    app:imageUrl="@{comment.imageUrl}"
+                    app:image_url="@{comment.imageUrl}"
                     app:isCircle="@{false}"
                     tools:src="@mipmap/ic_launcher" />
 

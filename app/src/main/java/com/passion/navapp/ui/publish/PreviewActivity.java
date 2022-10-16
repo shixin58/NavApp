@@ -44,6 +44,13 @@ public class PreviewActivity extends AppCompatActivity implements View.OnClickLi
 
     private SimpleExoPlayer mExoPlayer;
 
+    /**
+     *
+     * @param activity
+     * @param previewUrl
+     * @param isVideo 预览视频还是图片
+     * @param btnTxt null不显示完成按钮；非空显示完成按钮、点击完成返回图片路径。
+     */
     public static void openActivityForResult(Activity activity, String previewUrl, boolean isVideo, String btnTxt) {
         Intent intent = new Intent(activity, PreviewActivity.class);
         intent.putExtra(KEY_PREVIEW_URL, previewUrl);
@@ -61,6 +68,7 @@ public class PreviewActivity extends AppCompatActivity implements View.OnClickLi
         String previewUrl = getIntent().getStringExtra(KEY_PREVIEW_URL);
         boolean isVideo = getIntent().getBooleanExtra(KEY_IS_VIDEO, false);
         String btnTxt = getIntent().getStringExtra(KEY_BTN_TXT);
+
         if (TextUtils.isEmpty(btnTxt)) {
             mBinding.actionOk.setVisibility(View.GONE);
         } else {

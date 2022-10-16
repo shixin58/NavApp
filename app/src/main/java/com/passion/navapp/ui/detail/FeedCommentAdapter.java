@@ -93,8 +93,8 @@ public class FeedCommentAdapter extends AbsPagedListAdapter<Comment,FeedCommentA
             @Override
             public void onClick(View v) {
                 boolean isVideo = comment.commentType == Comment.COMMENT_TYPE_VIDEO;
-                PreviewActivity.openActivityForResult((Activity) mContext,
-                        isVideo? comment.videoUrl : comment.imageUrl, isVideo, null);
+                String previewUrl = isVideo? comment.videoUrl : comment.imageUrl;
+                PreviewActivity.openActivityForResult((Activity) mContext, previewUrl, isVideo, null);
             }
         });
     }

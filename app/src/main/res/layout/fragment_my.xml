@@ -44,7 +44,7 @@
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginStart="@dimen/dp_16"
             android:layout_marginTop="75dp"
-            app:imageUrl="@{user.avatar}"
+            app:image_url="@{user.avatar}"
             app:isCircle="@{true}"
             tools:src="@mipmap/ic_launcher_round"/>
 

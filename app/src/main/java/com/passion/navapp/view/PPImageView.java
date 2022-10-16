@@ -40,13 +40,13 @@ public class PPImageView extends AppCompatImageView {
         setImageUrl(this, imageUrl, false, 0);
     }
 
-    @BindingAdapter(value = {"imageUrl", "isCircle"}, requireAll = true)
+    @BindingAdapter(value = {"image_url", "isCircle"}, requireAll = true)
     public static void setImageUrl(PPImageView imageView, String imageUrl, boolean isCircle) {
         setImageUrl(imageView, imageUrl, isCircle, 0);
     }
 
     // app:imageUrl/isCircle/radius属性不需要在资源文件声明declare-styleable/attr。
-    @BindingAdapter(value = {"imageUrl", "isCircle", "radius"}, requireAll = false)
+    @BindingAdapter(value = {"image_url", "isCircle", "radius"}, requireAll = false)
     public static void setImageUrl(PPImageView imageView, String imageUrl, boolean isCircle, int radius) {
 //        imageView.getContext()，仅用View提供Context
         RequestBuilder<Drawable> builder = Glide.with(imageView)

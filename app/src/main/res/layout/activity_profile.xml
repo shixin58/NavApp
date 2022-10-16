@@ -45,7 +45,7 @@
                         android:layout_height="90dp"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:imageUrl="@{user.avatar}"
+                        app:image_url="@{user.avatar}"
                         app:isCircle="@{true}"/>
 
                     <LinearLayout

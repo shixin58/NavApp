@@ -27,7 +27,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:scaleType="centerCrop"
-            app:imageUrl="@{feedTag.background}"/>
+            app:image_url="@{feedTag.background}"/>
 
         <TextView
             android:id="@+id/header_title"

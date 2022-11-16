@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Rational;
@@ -39,7 +40,6 @@ import java.io.File;
 import java.util.LinkedList;
 
 public class CaptureActivity extends AppCompatActivity {
-    private static final String[] PERMISSIONS = new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO};
     private static final int REQUEST_CODE_PERMISSIONS = 1000;
 
     public static final int REQ_CAPTURE = 1001;
@@ -50,6 +50,8 @@ public class CaptureActivity extends AppCompatActivity {
     public static final String RESULT_FILE_IS_VIDEO = "file_is_video";
 
     private ActivityCaptureBinding mBinding;
+
+    private String[] requiredPermissions;
     private final LinkedList<String> deniedPermissions = new LinkedList<>();
 
     private final CameraX.LensFacing mLensFacing = CameraX.LensFacing.BACK;
@@ -59,8 +61,6 @@ public class CaptureActivity extends AppCompatActivity {
     private final Size mResolution = new Size(1280, 720);
     private final Rational mRational = new Rational(9, 16);
 
-    // Preview/ImageCapture/VideoCapture均是UseCase子类，均通过Builder模式构建
-    private Preview mPreview;
     private ImageCapture mImageCapture;
     private VideoCapture mVideoCapture;
 
@@ -79,7 +79,14 @@ public class CaptureActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         mBinding = ActivityCaptureBinding.inflate(getLayoutInflater());
         setContentView(mBinding.getRoot());
-        ActivityCompat.requestPermissions(this, PERMISSIONS, REQUEST_CODE_PERMISSIONS);
+
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
+            requiredPermissions = new String[]{Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE};
+        } else {
+            requiredPermissions = new String[]{Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO};
+        }
+        ActivityCompat.requestPermissions(this, requiredPermissions, REQUEST_CODE_PERMISSIONS);
 
         mBinding.recordView.setOnRecordListener(new RecordView.OnRecordListener() {
             @Override
@@ -180,7 +187,7 @@ public class CaptureActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == REQUEST_CODE_PERMISSIONS) {
             deniedPermissions.clear();
-            for (int i=0;i<permissions.length;i++) {
+            for (int i=0; i<permissions.length; i++) {
                 if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
                     deniedPermissions.add(permissions[i]);
                 }
@@ -198,7 +205,7 @@ public class CaptureActivity extends AppCompatActivity {
                         .setPositiveButton(R.string.capture_permission_ok, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                ActivityCompat.requestPermissions(CaptureActivity.this, PERMISSIONS, REQUEST_CODE_PERMISSIONS);
+                                ActivityCompat.requestPermissions(CaptureActivity.this, requiredPermissions, REQUEST_CODE_PERMISSIONS);
                             }
                         })
                         .create()
@@ -217,7 +224,8 @@ public class CaptureActivity extends AppCompatActivity {
                 .setTargetResolution(mResolution)
                 .setTargetAspectRatio(mRational)
                 .build();
-        mPreview = new Preview(previewConfig);
+        // Preview/ImageCapture/VideoCapture均是UseCase子类，均通过Builder模式构建
+        Preview preview = new Preview(previewConfig);
 
         mImageCapture = new ImageCapture(new ImageCaptureConfig.Builder()
                 .setLensFacing(mLensFacing)// 摄像头位置
@@ -235,21 +243,18 @@ public class CaptureActivity extends AppCompatActivity {
                 .setBitRate(3 * 1024 * 1024)// bit rate
                 .build());
 
-        mPreview.setOnPreviewOutputUpdateListener(new Preview.OnPreviewOutputUpdateListener() {
-            @Override
-            public void onUpdated(Preview.PreviewOutput output) {
-                TextureView textureView = mBinding.textureView;
-                ViewGroup viewGroup = (ViewGroup) textureView.getParent();
-                viewGroup.removeView(textureView);
-                viewGroup.addView(textureView, 0);
+        preview.setOnPreviewOutputUpdateListener(output -> {
+            TextureView textureView = mBinding.textureView;
+            ViewGroup viewGroup = (ViewGroup) textureView.getParent();
+            viewGroup.removeView(textureView);
+            viewGroup.addView(textureView, 0);
 
-                // 将视频流关联到TextureView，即设置SurfaceTexture
-                textureView.setSurfaceTexture(output.getSurfaceTexture());
-            }
+            // 将视频流关联到TextureView，即设置SurfaceTexture
+            textureView.setSurfaceTexture(output.getSurfaceTexture());
         });
 
         // 先解绑所有UseCase，再绑定用到的UseCase
         CameraX.unbindAll();
-        CameraX.bindToLifecycle(this, mPreview, mImageCapture, mVideoCapture);
+        CameraX.bindToLifecycle(this, preview, mImageCapture, mVideoCapture);
     }
 }

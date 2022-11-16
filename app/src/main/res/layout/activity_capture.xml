@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal|bottom"
         android:layout_marginBottom="200dp"
-        android:textColor="@color/color_white"
+        android:textColor="@android:color/white"
         android:text="@string/capture_tips" />
 
     <com.passion.navapp.view.RecordView
@@ -25,7 +25,7 @@
         android:layout_gravity="center_horizontal|bottom"
         android:layout_marginBottom="@dimen/dp_60"
         app:duration="10"
-        app:fill_color="@color/color_white"
+        app:fill_color="@android:color/white"
         app:progress_color="@color/color_theme"
         app:progress_width="@dimen/dp_4"
         app:radius="@dimen/dp_40" />

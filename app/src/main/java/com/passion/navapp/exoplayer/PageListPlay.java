@@ -39,11 +39,8 @@ public class PageListPlay {
                 new AnalyticsCollector(Clock.DEFAULT))
                 .build();
 
-        mPlayerView = (PlayerView) LayoutInflater.from(app)
-                .inflate(R.layout.layout_exo_player_view, null, false);
-
-        mControlView = (PlayerControlView) LayoutInflater.from(app)
-                .inflate(R.layout.layout_exo_player_controller_view, null, false);
+        mPlayerView = (PlayerView) LayoutInflater.from(app).inflate(R.layout.layout_exo_player_view, null);
+        mControlView = (PlayerControlView) LayoutInflater.from(app).inflate(R.layout.layout_exo_player_controller_view, null);
 
         mPlayerView.setPlayer(mExoPlayer);
         mControlView.setPlayer(mExoPlayer);
@@ -65,7 +62,8 @@ public class PageListPlay {
 
         if (mControlView != null) {
             mControlView.setPlayer(null);
-            // PlayerControlView#setVisibilityListener()在v2.14.0被替换为addVisibilityListener()
+            // PlayerControlView#setVisibilityListener(listener/null)在v2.14.0被删除，
+            // 替换为addVisibilityListener()/removeVisibilityListener()
             mControlView.removeVisibilityListener(mVisibilityListener);
             mControlView = null;
         }

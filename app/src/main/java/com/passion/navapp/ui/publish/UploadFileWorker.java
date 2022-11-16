@@ -18,7 +18,7 @@ public class UploadFileWorker extends Worker {
     @NonNull
     @Override
     public Result doWork() {
-        // doWork本身在自线程执行，且需要返回值。内部不再切线程
+        // doWork本身在子线程执行，且需要返回值。内部不再切线程
         Data inputData = getInputData();
         String filePath = inputData.getString("file");
         String fileUrl = FileUploadManager.upload(filePath);

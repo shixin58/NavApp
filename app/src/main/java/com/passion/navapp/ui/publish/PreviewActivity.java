@@ -47,7 +47,7 @@ public class PreviewActivity extends AppCompatActivity implements View.OnClickLi
     /**
      *
      * @param activity
-     * @param previewUrl
+     * @param previewUrl 本地文件filePath，或网络url如imageUrl、videoUrl
      * @param isVideo 预览视频还是图片
      * @param btnTxt null不显示完成按钮；非空显示完成按钮、点击完成返回图片路径。
      */
@@ -94,8 +94,10 @@ public class PreviewActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void previewVideo(String previewUrl) {
+        // 1）初始化PlayerView
         mBinding.playerView.setVisibility(View.VISIBLE);
-        // 用ExoPlayer播放本地视频，实现预览
+
+        // 2）创建ExoPlayer。用ExoPlayer播放本地视频，实现预览
         mExoPlayer = new SimpleExoPlayer.Builder(this,
                 new DefaultRenderersFactory(this),
                 new DefaultTrackSelector(this),
@@ -105,7 +107,7 @@ public class PreviewActivity extends AppCompatActivity implements View.OnClickLi
                 new AnalyticsCollector(Clock.DEFAULT))
                 .build();
 
-        // 将本地或网络url转化为Uri，供MediaSource使用
+        // 3）将本地或网络url转化为Uri，供MediaSource使用
         Uri uri = null;
         File file = new File(previewUrl);
         if (file.exists()) {// 本地文件，如发布预览
@@ -121,7 +123,7 @@ public class PreviewActivity extends AppCompatActivity implements View.OnClickLi
             uri = Uri.parse(previewUrl);
         }
 
-        // 创建MediaSource
+        // 4）创建MediaSource
         String userAgent = Util.getUserAgent(this, getPackageName());
         ProgressiveMediaSource.Factory mediaSourceFactory = new ProgressiveMediaSource.Factory(
                 // DefaultDataSource会将网络请求委托给DefaultHttpDataSource
@@ -143,10 +145,11 @@ public class PreviewActivity extends AppCompatActivity implements View.OnClickLi
                 .build();
         ProgressiveMediaSource mediaSource = mediaSourceFactory.createMediaSource(mediaItem);
 
+        // 5）加载MediaSource，将PlayerView绑定到SimpleExoPlayer，开始播放
         mExoPlayer.setMediaSource(mediaSource);
         mExoPlayer.prepare();
         mExoPlayer.setPlayWhenReady(true);
-        mBinding.playerView.setPlayer(mExoPlayer);// 将PlayerView绑定到SimpleExoPlayer
+        mBinding.playerView.setPlayer(mExoPlayer);
     }
 
     @Override

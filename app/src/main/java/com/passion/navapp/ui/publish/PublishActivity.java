@@ -79,6 +79,7 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
             CaptureActivity.openActivityForResult(this);
         } else if (v==mBinding.actionPublish) {
             publish();
+//            PreviewActivity.openActivityForResult(this, "https://v.aldelo.com/tutorial/help/whyaldeloexpress.m3u8", true, null);
         } else if (v==mBinding.actionAddTag) {
             TagBottomSheetDialogFragment fragment = new TagBottomSheetDialogFragment();
             fragment.setOnTagItemSelectedListener(new TagBottomSheetDialogFragment.OnTagItemSelectedListener() {

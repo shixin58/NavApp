@@ -18,6 +18,7 @@ import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.analytics.AnalyticsCollector;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
 import com.google.android.exoplayer2.source.DefaultMediaSourceFactory;
+import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.source.ProgressiveMediaSource;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.upstream.DataSource;
@@ -123,27 +124,30 @@ public class PreviewActivity extends AppCompatActivity implements View.OnClickLi
             uri = Uri.parse(previewUrl);
         }
 
-        // 4）创建MediaSource
+        // 4）先创建dataSourceFactory和mediaItem，创建MediaSource
         String userAgent = Util.getUserAgent(this, getPackageName());
-        ProgressiveMediaSource.Factory mediaSourceFactory = new ProgressiveMediaSource.Factory(
-                // DefaultDataSource会将网络请求委托给DefaultHttpDataSource
-                new DefaultDataSourceFactory(this, new TransferListener() {
-                    @Override
-                    public void onTransferInitializing(DataSource source, DataSpec dataSpec, boolean isNetwork) {}
+        // DefaultDataSource会将网络请求委托给DefaultHttpDataSource
+        DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(this, new TransferListener() {
+            @Override
+            public void onTransferInitializing(DataSource source, DataSpec dataSpec, boolean isNetwork) {}
 
-                    @Override
-                    public void onTransferStart(DataSource source, DataSpec dataSpec, boolean isNetwork) {}
+            @Override
+            public void onTransferStart(DataSource source, DataSpec dataSpec, boolean isNetwork) {}
 
-                    @Override
-                    public void onBytesTransferred(DataSource source, DataSpec dataSpec, boolean isNetwork, int bytesTransferred) {}
+            @Override
+            public void onBytesTransferred(DataSource source, DataSpec dataSpec, boolean isNetwork, int bytesTransferred) {}
 
-                    @Override
-                    public void onTransferEnd(DataSource source, DataSpec dataSpec, boolean isNetwork) {}
-                }, new DefaultHttpDataSource.Factory().setUserAgent(userAgent)));
+            @Override
+            public void onTransferEnd(DataSource source, DataSpec dataSpec, boolean isNetwork) {}
+        }, new DefaultHttpDataSource.Factory().setUserAgent(userAgent));
         MediaItem mediaItem = new MediaItem.Builder()
                 .setUri(uri)
                 .build();
-        ProgressiveMediaSource mediaSource = mediaSourceFactory.createMediaSource(mediaItem);
+
+        MediaSource mediaSource = new ProgressiveMediaSource.Factory(dataSourceFactory)
+                .createMediaSource(mediaItem);
+//        MediaSource mediaSource = new HlsMediaSource.Factory(dataSourceFactory)
+//                .createMediaSource(mediaItem);
 
         // 5）加载MediaSource，将PlayerView绑定到SimpleExoPlayer，开始播放
         mExoPlayer.setMediaSource(mediaSource);

@@ -65,6 +65,7 @@ dependencies {
     api "com.google.android.exoplayer:exoplayer-core:$exo_player_version"
     api "com.google.android.exoplayer:exoplayer-dash:$exo_player_version"
     api "com.google.android.exoplayer:exoplayer-ui:$exo_player_version"
+    api "com.google.android.exoplayer:exoplayer-hls:$exo_player_version"
 
     // 引入CameraX
     // v1.0.0-alpha04到v1.0.0变化很大，暂不升级至v1.1.0

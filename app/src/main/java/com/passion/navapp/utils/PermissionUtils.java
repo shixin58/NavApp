@@ -32,11 +32,13 @@ public class PermissionUtils {
     private static final String TAG = PermissionUtils.class.getSimpleName();
 
     public static void requestStoragePermission(Activity activity, int requestCode) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M || Build.VERSION.SDK_INT > Build.VERSION_CODES.P)
             return;
         Context ctx = AppGlobals.getApplication();
-        if(ContextCompat.checkSelfPermission(ctx, READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            if(ActivityCompat.shouldShowRequestPermissionRationale(activity, READ_EXTERNAL_STORAGE)) {
+        if (ContextCompat.checkSelfPermission(ctx, READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+                || ContextCompat.checkSelfPermission(ctx, WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(activity, READ_EXTERNAL_STORAGE)
+                    || ActivityCompat.shouldShowRequestPermissionRationale(activity, WRITE_EXTERNAL_STORAGE)) {
                 Toast.makeText(activity, "您需要到系统设置里打开存储权限", Toast.LENGTH_SHORT).show();
             } else {
                 ActivityCompat.requestPermissions(activity, new String[]{READ_EXTERNAL_STORAGE,
@@ -97,8 +99,10 @@ public class PermissionUtils {
             return;
         Context ctx = AppGlobals.getApplication();
         LinkedList<String> permissions = new LinkedList<>();
-        permissions.add(READ_EXTERNAL_STORAGE);
-        permissions.add(WRITE_EXTERNAL_STORAGE);
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
+            permissions.add(READ_EXTERNAL_STORAGE);
+            permissions.add(WRITE_EXTERNAL_STORAGE);
+        }
         permissions.add(READ_PHONE_STATE);
         permissions.add(CAMERA);
         permissions.add(RECORD_AUDIO);

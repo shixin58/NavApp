@@ -10,7 +10,8 @@
 /.idea/misc.xml
 /.idea/compiler.xml
 /.idea/encodings.xml
-.DS_Store
+/.idea/gradle.xml
+**/.DS_Store
 /build
 /captures
 .externalNativeBuild
